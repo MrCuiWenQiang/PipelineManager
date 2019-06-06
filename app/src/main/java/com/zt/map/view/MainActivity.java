@@ -111,6 +111,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     private final String KEY_LINE_ID = "KEY_LINE_ID";
 
     private int typeColor;
+    boolean isOneLoad = true;//是否是第一次加载
 
     private float zoomLevel = 20;
 
@@ -654,7 +655,8 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                     drawMarker(item.getLatitude(), item.getLongitude(), item.getId(), color, bitmap.getBitmap(), item.getWtdh());
                 }
             }
-            if (markers.size() > 0) {
+            if (markers.size() > 0&&isOneLoad) {
+                isOneLoad = false;
                 Tab_Marker mk = markers.get(markers.size() - 1);
                 LatLng ll = new LatLng(mk.getLatitude(),
                         mk.getLongitude());
@@ -817,6 +819,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     final int TAG_SELECT_PHOTO = 3;
     final int TAG_SELECT_MARKER = 4;
     final int TAG_SELECT_OUT = 5;
+    final int TAG_SELECT_INT = 6;
 
     private void showBottomDialog() {
         QMUIBottomSheet.BottomGridSheetBuilder builder = new QMUIBottomSheet.BottomGridSheetBuilder(getContext());
@@ -826,6 +829,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         builder.addItem(R.mipmap.photo, "工程相册", TAG_SELECT_PHOTO, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.markerquery, "查找点号", TAG_SELECT_MARKER, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.out, "导出工程", TAG_SELECT_OUT, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
+        builder.addItem(R.mipmap.out, "导入工程", TAG_SELECT_INT, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.setOnSheetItemClickListener(new QMUIBottomSheet.BottomGridSheetBuilder.OnSheetItemClickListener() {
             @Override
             public void onClick(QMUIBottomSheet dialog, View itemView) {
@@ -842,6 +846,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                     case TAG_SELECT_CLONE: {
                         baiduMap.clear();
                         projectId = -1;
+                        isOneLoad = true;
                         break;
                     }
                     case TAG_SELECT_PHOTO: {
@@ -868,6 +873,24 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                     case TAG_SELECT_OUT: {
                         if (projectId >= 0) {
                             // TODO: 2019/6/6 daochu
+                            showListDialog(new String[]{"导出为Excel","导出为mdb"}, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    ToastUtility.showToast("功能正在完善");
+                                }
+                            });
+
+                        } else {
+                            ToastUtility.showToast("请选择工程");
+                        }
+
+                        break;
+                    }
+                    case TAG_SELECT_INT: {
+                        if (projectId >= 0) {
+                            // TODO: 2019/6/6 导入
+
                         } else {
                             ToastUtility.showToast("请选择工程");
                         }
