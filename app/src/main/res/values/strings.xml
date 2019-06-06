@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">地下管线数据采集系统</string>
+    <string name="local">当前\n位置</string>
+</resources>
