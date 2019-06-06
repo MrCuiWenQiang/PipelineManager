@@ -2,6 +2,8 @@ package com.zt.map.presenter;
 
 import android.text.TextUtils;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.zt.map.constant.TypeConstant;
@@ -14,6 +16,7 @@ import com.zt.map.entity.db.system.Sys_TGCL;
 import com.zt.map.entity.db.tab.Tab_Line;
 import com.zt.map.entity.db.tab.Tab_Marker;
 import com.zt.map.model.SystemQueryModel;
+import com.zt.map.util.MapUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -267,11 +270,27 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
 
                 Tab_Marker s_maker = null;
                 Tab_Marker e_maker = null;
+                int errorValue = 10;
+                BaiduMap baiduMap = MapUtil.getmBaiduMap();
+                if (baiduMap!=null){
+                    MapStatus status = baiduMap.getMapStatus();
+                    float now_zoom = status.zoom;
+                    if (now_zoom >= 20){
+                        errorValue = 5;
+                    }else if (now_zoom >18){
+                        errorValue = 10;
+                    }else if (now_zoom>=10 && 18 >=now_zoom){
+                        errorValue = 50;
+                    }else if (now_zoom<10 ){
+                        errorValue = 200;
+                    }
+                }
+
                 //距离误差在20m
-                if (s_d < 3) {
+                if (s_d < errorValue) {
                     s_maker = LitPalUtils.selectsoloWhere(Tab_Marker.class, "id = ?", String.valueOf(s_id));
                 }
-                if (e_d < 3) {
+                if (e_d < errorValue) {
                     e_maker = LitPalUtils.selectsoloWhere(Tab_Marker.class, "id = ?", String.valueOf(e_id));
                 }
                 if (s_id == e_id) {//避免短线同名

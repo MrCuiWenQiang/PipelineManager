@@ -271,4 +271,20 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
             }
         });
     }
+
+    public void queryProject(final long projectId){
+      DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<String>() {
+
+          @Override
+          protected String jobContent() throws Exception {
+              Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class,"id=?",String.valueOf(projectId));
+              return project==null?"未知":project.getName();
+          }
+
+          @Override
+          protected void jobEnd(String s) {
+              getView().queryProjectName(s);
+          }
+      });
+    }
 }

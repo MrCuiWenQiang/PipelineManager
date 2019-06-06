@@ -15,6 +15,13 @@ public class MapUtil {
         mBaiduMap = BaiduMap;
         point= new Point();
     }
+
+    public static BaiduMap getmBaiduMap() {
+        return mBaiduMap;
+    }
+
+
+
     /**
      * 屏幕坐标点转地图坐标点
      *

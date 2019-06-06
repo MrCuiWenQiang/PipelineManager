@@ -24,6 +24,8 @@ public class MarkerContract {
 
         void getName(String name);
         void createPhoto();
+
+        void queryProjectName(String project);
     }
 
     public interface Presenter {

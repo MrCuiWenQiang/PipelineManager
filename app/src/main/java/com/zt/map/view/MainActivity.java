@@ -616,6 +616,9 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     @Override
     public void createProject_success(String msg, long projectId) {
         this.projectId = projectId;
+        isOneLoad = true;
+        baiduMap.clear();
+        v_canval.clean();
         v_canval.setVisibility(View.GONE);
         ToastUtility.showToast(msg);
     }
@@ -735,7 +738,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
             LatLng llText = new LatLng(item.getLatitude(), item.getLongitude());
             OverlayOptions mTextOptions = new TextOptions()
                     .text(item.getValue())
-                    .fontSize(30) //字号
+                    .fontSize(60) //字号
                     .fontColor(item.getColor())
                     .position(llText);
             Overlay mText = baiduMap.addOverlay(mTextOptions);
@@ -755,10 +758,11 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         LatLng latLng = new LatLng(latitude, longitude);
 //        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.makericon);
         View ll = getMyMarker(icon, color, name);
+        int height = ll.findViewById(R.id.iv_icon).getHeight();
         BitmapDescriptor bitmap = BitmapDescriptorFactory.fromView(ll);
         //构建MarkerOption，用于在地图上添加Marker
         OverlayOptions option = new MarkerOptions()
-                .position(latLng).draggable(true).flat(true)
+                .position(latLng).draggable(true).flat(true).yOffset(height/2)
                 .icon(bitmap).extraInfo(bundle);
         baiduMap.addOverlay(option);
     }
@@ -929,6 +933,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         dialog.setListener(new CreateDialog.OnCreateListener() {
             @Override
             public void onCreateProject(boolean isSelect, Editable name) {
+                isOneLoad = true;
                 mPresenter.createProject(name, isSelect);
 
             }

@@ -55,6 +55,6 @@ dependencies {
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     implementation files('libs/BaiduLBS_Android.jar')
     implementation 'net.sourceforge.jexcelapi:jxl:2.6.12'
-    implementation 'cn.finalteam.rxgalleryfinal:library:1.0.9'
+//    implementation 'cn.finalteam.rxgalleryfinal:library:1.0.9'
     implementation files('libs/sun.misc.BASE64Decoder.jar')
 }

@@ -3,12 +3,14 @@ package com.zt.map.view;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -33,22 +36,23 @@ import com.zt.map.entity.db.PhotoInfo;
 import com.zt.map.entity.db.tab.Tab_Marker;
 import com.zt.map.entity.db.tab.Tab_marker_photo;
 import com.zt.map.presenter.MarkerPresenter;
+import com.zt.map.util.PhotoUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import cn.faker.repaymodel.mvp.BaseMVPAcivity;
 import cn.faker.repaymodel.util.LogUtil;
 import cn.faker.repaymodel.util.ToastUtility;
-import cn.finalteam.rxgalleryfinal.RxGalleryFinalApi;
-import cn.finalteam.rxgalleryfinal.utils.Logger;
 
 public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPresenter> implements MarkerContract.View, View.OnClickListener {
 
@@ -363,7 +367,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
                             dialog.dismiss();
                             switch (which) {
                                 case 0: {
-                                    RxGalleryFinalApi.openZKCamera(MarkerActivity.this);
+                                    mPresenter.queryProject(projectId);
                                     break;
                                 }
                                 case 1: {
@@ -380,6 +384,15 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
                 }
             }
         });
+    }
+
+    @Override
+    public void queryProjectName(String project) {
+        if (TextUtils.isEmpty(project)){
+            ToastUtility.showToast("未查询到项目");
+            return;
+        }
+        PhotoUtil.openZKCamera(MarkerActivity.this,project);
     }
 
     private void selectValue(final TextView tv, final String[] items) {
@@ -401,11 +414,11 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case RxGalleryFinalApi.TAKE_IMAGE_REQUEST_CODE: {
+            case PhotoUtil.TAKE_IMAGE_REQUEST_CODE: {
                 if (resultCode == Activity.RESULT_OK){
                     PhotoInfo info = new PhotoInfo();
                     info.setName("");
-                    info.setPath(RxGalleryFinalApi.fileImagePath.getPath());
+                    info.setPath(PhotoUtil.fileImagePath.getPath());
                     photos.add(info);
                 }
                     break;
@@ -427,6 +440,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
             }
         }
     }
+
 
 
 }
