@@ -112,6 +112,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
 
     private int typeColor;
 
+    private float zoomLevel = 20;
 
     @Override
     protected int getLayoutContentId() {
@@ -181,6 +182,8 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         ib_marker.setOnClickListener(this);
         ib_bz.setOnClickListener(this);
 
+
+
         v_canval.setOnDrawListener(new CanvalView.onDrawListener() {
             @Override
             public void onDrawLineFinal(float start_x, float start_y, MotionEvent end_Event) {
@@ -224,7 +227,38 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                 mText = baiduMap.addOverlay(mTextOptions);
             }
         });
+        initMapStatus();
     }
+
+
+    private void initMapStatus(){
+        baiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
+            @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus) {
+
+            }
+
+            @Override
+            public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+
+            }
+
+            @Override
+            public void onMapStatusChange(MapStatus mapStatus) {
+
+            }
+
+            @Override
+            public void onMapStatusChangeFinish(MapStatus mapStatus) {
+                zoomLevel = mapStatus.zoom;
+                if (islocal){
+                    isMe = false;
+                }
+            }
+        });
+
+    }
+
 
     @Override
     public void onMapClick(LatLng latLng) {
@@ -320,6 +354,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     }
 
     boolean isMe = true;//是否是当前位置
+    boolean islocal = false;//是否开启定位
 
     @Override
     public void onClick(View v) {
@@ -409,11 +444,13 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
             if (ib_marker.getVisibility() == View.VISIBLE) {
                 ib_marker.setVisibility(View.GONE);
                 isMe = true;
+                islocal = false;
                 LocalUtil.stop();
                 baiduMap.setMyLocationEnabled(false);
                 return;
             } else {
                 baiduMap.setMyLocationEnabled(true);
+                islocal = true;
             }
 
             ib_marker.setVisibility(View.VISIBLE);
@@ -421,7 +458,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                 LatLng ll = new LatLng(boot_location.getLatitude(),
                         boot_location.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(18.0f);
+                builder.target(ll).zoom(zoomLevel);
                 baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
 
@@ -442,7 +479,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                         LatLng ll = new LatLng(location.getLatitude(),
                                 location.getLongitude());
                         MapStatus.Builder builder = new MapStatus.Builder();
-                        builder.target(ll).zoom(18.0f);
+                        builder.target(ll).zoom(20f);
                         baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                     }
                     boot_location = location;
@@ -622,7 +659,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                 LatLng ll = new LatLng(mk.getLatitude(),
                         mk.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(18.0f);
+                builder.target(ll).zoom(zoomLevel);
                 baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
         }
@@ -659,7 +696,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         LatLng ll = new LatLng(data.getLatitude(),
                 data.getLongitude());
         MapStatus.Builder builder = new MapStatus.Builder();
-        builder.target(ll).zoom(18.0f);
+        builder.target(ll).zoom(zoomLevel);
         baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
         ImageView button = new ImageView(getApplicationContext());

@@ -267,11 +267,11 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
 
                 Tab_Marker s_maker = null;
                 Tab_Marker e_maker = null;
-
-                if (s_d < 200) {
+                //距离误差在20m
+                if (s_d < 3) {
                     s_maker = LitPalUtils.selectsoloWhere(Tab_Marker.class, "id = ?", String.valueOf(s_id));
                 }
-                if (e_d < 200) {
+                if (e_d < 3) {
                     e_maker = LitPalUtils.selectsoloWhere(Tab_Marker.class, "id = ?", String.valueOf(e_id));
                 }
                 if (s_id == e_id) {//避免短线同名
