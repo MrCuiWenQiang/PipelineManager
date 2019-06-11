@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.view.MotionEvent;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 
 public class MapUtil {
@@ -14,13 +15,19 @@ public class MapUtil {
     public static void init(BaiduMap BaiduMap){
         mBaiduMap = BaiduMap;
         point= new Point();
+        settingUi();
     }
 
     public static BaiduMap getmBaiduMap() {
         return mBaiduMap;
     }
 
-
+    private static void settingUi(){
+        UiSettings uiSettings = mBaiduMap.getUiSettings();
+        uiSettings.setCompassEnabled(true);
+        uiSettings.setOverlookingGesturesEnabled(false);
+        uiSettings.setRotateGesturesEnabled(false);
+    }
 
     /**
      * 屏幕坐标点转地图坐标点

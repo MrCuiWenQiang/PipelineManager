@@ -2,18 +2,11 @@ package com.zt.map.view;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -23,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -38,23 +30,16 @@ import com.zt.map.entity.db.tab.Tab_marker_photo;
 import com.zt.map.presenter.MarkerPresenter;
 import com.zt.map.util.PhotoUtil;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import cn.faker.repaymodel.mvp.BaseMVPAcivity;
-import cn.faker.repaymodel.util.LogUtil;
 import cn.faker.repaymodel.util.ToastUtility;
 
-public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPresenter> implements MarkerContract.View, View.OnClickListener {
+public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPresenter> implements MarkerContract.View, View.OnClickListener {
 
     private static final String KEY_LATITUDE = "latitude";
     private static final String KEY_LONGITUDE = "longitude";
@@ -69,7 +54,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
         args.putDouble(KEY_LONGITUDE, longitude);
         args.putLong(PROJECT_ID, projectId);
         args.putLong(TYPE_ID, typeId);
-        Intent intent = new Intent(activity, MarkerActivity.class);
+        Intent intent = new Intent(activity, MarkerNowActivity.class);
         intent.putExtras(args);
         activity.startActivityForResult(intent, requestCode);
     }
@@ -81,7 +66,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
         args.putLong(PROJECT_ID, projectId);
         args.putLong(TYPE_ID, typeId);
         args.putLong(LINEID, lineId);
-        Intent intent = new Intent(activity, MarkerActivity.class);
+        Intent intent = new Intent(activity, MarkerNowActivity.class);
         intent.putExtras(args);
         activity.startActivityForResult(intent, requestCode);
     }
@@ -89,31 +74,40 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
     public static void newInstance(Activity activity, long makerId, int requestCode) {
         Bundle args = new Bundle();
         args.putLong(KEY_ID, makerId);
-        Intent intent = new Intent(activity, MarkerActivity.class);
+        Intent intent = new Intent(activity, MarkerNowActivity.class);
         intent.putExtras(args);
         activity.startActivityForResult(intent, requestCode);
     }
 
-    private EditText tvDh;
-    private EditText tv_wtdh;
+    private EditText tvGxlx;
+    private EditText tvWtdh;
     private EditText tvTz;
+    private ImageView ivLoadTzd;
     private EditText tvFsw;
+    private ImageView ivLoadFsw;
     private EditText tvX;
     private EditText tvY;
     private EditText tvDmgc;
     private EditText tvPxjw;
-    private EditText tvDldm;
-    private EditText tvMsnd;
-    private EditText tvTfh;
-    private EditText tvFzlx;
+    private EditText tvJlx;
+    private EditText tvJzj;
+    private EditText tvJbs;
+    private EditText tvJds;
+    private EditText tvJglx;
+    private ImageView ivLoadJglx;
+    private EditText tvJggg;
+    private EditText tvJgcz;
+    private ImageView ivLoadJgcz;
+    private EditText tvSzwz;
+    private ImageView ivLoadSzwz;
+    private EditText tvSyzt;
+    private ImageView ivLoadSyzt;
+    private EditText tvTcfs;
+    private ImageView ivLoadTcfs;
     private EditText tvRemarks;
 
     private TextView tvSave;
     private TextView tvExit;
-
-    private ImageView iv_load_tzd;
-    private ImageView iv_load_fsw;
-    private ImageView iv_load_remarks;
 
     private long projectId;
     private long typeId;
@@ -125,7 +119,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
 
     @Override
     protected int getLayoutContentId() {
-        return R.layout.ac_marker;
+        return R.layout.ac_now_marker;
     }
 
     @Override
@@ -133,25 +127,35 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
         setLeftTitle("绘制管点", R.color.white);
         setToolBarBackgroundColor(R.color.blue);
 
-        tvDh = findViewById(R.id.tv_dh);
-        tv_wtdh = findViewById(R.id.tv_wtdh);
+        tvGxlx = findViewById(R.id.tv_gxlx);
+        tvWtdh = findViewById(R.id.tv_wtdh);
         tvTz = findViewById(R.id.tv_tz);
+        ivLoadTzd = findViewById(R.id.iv_load_tzd);
         tvFsw = findViewById(R.id.tv_fsw);
+        ivLoadFsw = findViewById(R.id.iv_load_fsw);
         tvX = findViewById(R.id.tv_x);
         tvY = findViewById(R.id.tv_y);
         tvDmgc = findViewById(R.id.tv_dmgc);
         tvPxjw = findViewById(R.id.tv_pxjw);
-        tvDldm = findViewById(R.id.tv_dldm);
-        tvMsnd = findViewById(R.id.tv_msnd);
-        tvTfh = findViewById(R.id.tv_tfh);
-        tvFzlx = findViewById(R.id.tv_fzlx);
+        tvJlx = findViewById(R.id.tv_jlx);
+        tvJzj = findViewById(R.id.tv_jzj);
+        tvJbs = findViewById(R.id.tv_jbs);
+        tvJds = findViewById(R.id.tv_jds);
+        tvJglx = findViewById(R.id.tv_jglx);
+        ivLoadJglx = findViewById(R.id.iv_load_jglx);
+        tvJggg = findViewById(R.id.tv_jggg);
+        tvJgcz = findViewById(R.id.tv_jgcz);
+        ivLoadJgcz = findViewById(R.id.iv_load_jgcz);
+        tvSzwz = findViewById(R.id.tv_szwz);
+        ivLoadSzwz = findViewById(R.id.iv_load_szwz);
+        tvSyzt = findViewById(R.id.tv_syzt);
+        ivLoadSyzt = findViewById(R.id.iv_load_syzt);
+        tvTcfs = findViewById(R.id.tv_tcfs);
+        ivLoadTcfs = findViewById(R.id.iv_load_tcfs);
         tvRemarks = findViewById(R.id.tv_remarks);
+
         tvSave = findViewById(R.id.tv_save);
         tvExit = findViewById(R.id.tv_exit);
-
-        iv_load_tzd = findViewById(R.id.iv_load_tzd);
-        iv_load_fsw = findViewById(R.id.iv_load_fsw);
-        iv_load_remarks = findViewById(R.id.iv_load_remarks);
     }
 
     @Override
@@ -181,9 +185,9 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
         super.initListener();
         tvSave.setOnClickListener(this);
         tvExit.setOnClickListener(this);
-        iv_load_tzd.setOnClickListener(this);
-        iv_load_fsw.setOnClickListener(this);
-        iv_load_remarks.setOnClickListener(this);
+        ivLoadTzd.setOnClickListener(this);
+        ivLoadFsw.setOnClickListener(this);
+
     }
 
     private void save() {
@@ -195,18 +199,24 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
         tab.setProjectId(projectId);
         tab.setTypeId(typeId);
 
-        tab.setTsdh(getValue(tvDh));
-        tab.setWtdh(getValue(tv_wtdh));
+        tab.setGxlx(getValue(tvGxlx));
+        tab.setWtdh(getValue(tvWtdh));
         tab.setTzd(getValue(tvTz));
         tab.setFsw(getValue(tvFsw));
         tab.setLatitude(getLong(tvX));
         tab.setLongitude(getLong(tvY));
         tab.setDmgc(getValue(tvDmgc));
         tab.setPxjw(getValue(tvPxjw));
-        tab.setDldm(getValue(tvDldm));
-        tab.setMsnd(getValue(tvMsnd));
-        tab.setTfh(getValue(tvTfh));
-        tab.setFzlx(getValue(tvFzlx));
+        tab.setJlx(getValue(tvJlx));
+        tab.setJzj(getValue(tvJzj));
+        tab.setJbs(getValue(tvJbs));
+        tab.setJds(getValue(tvJds));
+        tab.setJglx(getValue(tvJglx));
+        tab.setJggg(getValue(tvJggg));
+        tab.setJgcz(getValue(tvJgcz));
+        tab.setSzwz(getValue(tvSzwz));
+        tab.setSyzt(getValue(tvSyzt));
+        tab.setTcfs(getValue(tvTcfs));
         tab.setRemarks(getValue(tvRemarks));
 
         tab.setUpdateTime(new Date());
@@ -237,10 +247,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
                 mPresenter.query_fsw(typeId);
                 break;
             }
-            case R.id.iv_load_remarks: {
-                mPresenter.query_remarks(typeId);
-                break;
-            }
+
             case R.id.tv_save: {
                 save();
                 break;
@@ -293,18 +300,27 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
         tab = marker;
         projectId = marker.getProjectId();
         typeId = marker.getTypeId();
-        tvDh.setText(marker.getTsdh());
-        tv_wtdh.setText(marker.getWtdh());
+        tvGxlx.setText(marker.getGxlx());
+        tvWtdh.setText(marker.getWtdh());
         tvTz.setText(marker.getTzd());
         tvFsw.setText(marker.getFsw());
         tvX.setText(String.valueOf(marker.getLatitude()));
         tvY.setText(String.valueOf(marker.getLongitude()));
         tvDmgc.setText(marker.getDmgc());
         tvPxjw.setText(marker.getPxjw());
-        tvDldm.setText(marker.getDldm());
-        tvMsnd.setText(marker.getMsnd());
-        tvTfh.setText(marker.getTfh());
-        tvFzlx.setText(marker.getFzlx());
+
+
+        tvJlx.setText(marker.getJlx());
+        tvJzj.setText(marker.getJzj());
+        tvJbs.setText(marker.getJbs());
+        tvJds.setText(marker.getJds());
+        tvJglx.setText(marker.getJglx());
+        tvJggg.setText(marker.getJggg());
+        tvJgcz.setText(marker.getJgcz());
+        tvSzwz.setText(marker.getSzwz());
+        tvSyzt.setText(marker.getSyzt());
+        tvTcfs.setText(marker.getTcfs());
+
         tvRemarks.setText(marker.getRemarks());
         mPresenter.queryIsPhoto(projectId);
         dimiss();
@@ -331,16 +347,22 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
         tvFsw.setText(marker.getFsw());
         tvDmgc.setText(marker.getDmgc());
         tvPxjw.setText(marker.getPxjw());
-        tvDldm.setText(marker.getDldm());
-        tvMsnd.setText(marker.getMsnd());
-        tvTfh.setText(marker.getTfh());
-        tvFzlx.setText(marker.getFzlx());
+        tvJlx.setText(marker.getJlx());
+        tvJzj.setText(marker.getJzj());
+        tvJbs.setText(marker.getJbs());
+        tvJds.setText(marker.getJds());
+        tvJglx.setText(marker.getJglx());
+        tvJggg.setText(marker.getJggg());
+        tvJgcz.setText(marker.getJgcz());
+        tvSzwz.setText(marker.getSzwz());
+        tvSyzt.setText(marker.getSyzt());
+        tvTcfs.setText(marker.getTcfs());
         tvRemarks.setText(marker.getRemarks());
     }
 
     @Override
     public void getName(String name) {
-        tv_wtdh.setText(name);
+        tvWtdh.setText(name);
     }
 
     String[] lists = new String[]{"相机", "工程相册"};
@@ -357,7 +379,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
                         != PackageManager.PERMISSION_GRANTED) {
                     //申请WRITE_EXTERNAL_STORAGE权限
-                    ActivityCompat.requestPermissions(MarkerActivity.this, new String[]{
+                    ActivityCompat.requestPermissions(MarkerNowActivity.this, new String[]{
                                     Manifest.permission.CAMERA},
                             0);
                 } else {
@@ -392,7 +414,7 @@ public class MarkerActivity extends BaseMVPAcivity<MarkerContract.View, MarkerPr
             ToastUtility.showToast("未查询到项目");
             return;
         }
-        PhotoUtil.openZKCamera(MarkerActivity.this,project);
+        PhotoUtil.openZKCamera(MarkerNowActivity.this,project);
     }
 
     private void selectValue(final TextView tv, final String[] items) {

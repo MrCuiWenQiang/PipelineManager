@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/tv_type"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
             android:layout_gravity="center"
@@ -37,21 +37,21 @@
                     style="@style/open_icon_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/draw_pan" />
+                    android:src="@drawable/top_open_image_moven" />
 
                 <ImageButton
                     android:id="@+id/ib_draw_point"
                     style="@style/open_icon_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/draw_point" />
+                    android:src="@drawable/top_open_image_point" />
 
                 <ImageButton
                     android:id="@+id/ib_draw_line"
                     style="@style/open_icon_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/draw_line" />
+                    android:src="@drawable/top_open_image_line" />
 
 
                 <ImageButton
@@ -59,21 +59,21 @@
                     style="@style/open_icon_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/draw_insert" />
+                    android:src="@drawable/top_open_image_insert" />
 
                 <ImageButton
                     android:id="@+id/ib_draw_info"
                     style="@style/open_icon_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/draw_info" />
+                    android:src="@drawable/top_open_image_info" />
 
                 <ImageButton
                     android:id="@+id/ib_draw_delete"
                     style="@style/open_icon_ll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/draw_delete" />
+                    android:src="@drawable/top_open_image_delete" />
 
             </LinearLayout>
         </HorizontalScrollView>

@@ -1,5 +1,6 @@
 package com.zt.map.contract;
 
+import android.content.Context;
 import android.text.Editable;
 
 import com.zt.map.entity.db.TaggingEntiiy;
@@ -29,6 +30,8 @@ public class MainContract {
         void queryMarker(Tab_Marker data);
 
         void taggers(List<TaggingEntiiy> taggings);
+
+        void outExcel(String msg);
     }
 
     public interface Presenter {
@@ -43,6 +46,7 @@ public class MainContract {
         void queryTagger(long projectId,int which);
 
         void queryMarker(long projectId, String text);
+        public void outExcel(Long projectId, final Context mContext);
     }
 
     public interface Model {

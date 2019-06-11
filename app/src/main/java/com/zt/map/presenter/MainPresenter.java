@@ -1,6 +1,8 @@
 package com.zt.map.presenter;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 
@@ -13,6 +15,8 @@ import com.zt.map.entity.db.tab.Tab_Marker;
 import com.zt.map.entity.db.tab.Tab_Project;
 import com.zt.map.model.MainModel;
 import com.zt.map.model.SystemQueryModel;
+import com.zt.map.util.out.ExcelName;
+import com.zt.map.util.out.ExcelUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +25,7 @@ import java.util.Map;
 
 import cn.faker.repaymodel.mvp.BaseMVPModel;
 import cn.faker.repaymodel.mvp.BaseMVPPresenter;
+import cn.faker.repaymodel.util.DateUtils;
 import cn.faker.repaymodel.util.db.DBThreadHelper;
 import cn.faker.repaymodel.util.db.litpal.LitPalUtils;
 
@@ -268,9 +273,9 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
                             }
                         }
 
-                        if (which!=1){
-                            double x = (item.getStart_longitude() + item.getEnd_longitude())/2;
-                            double y = (item.getStart_latitude() + item.getEnd_latitude())/2;
+                        if (which != 1) {
+                            double x = (item.getStart_longitude() + item.getEnd_longitude()) / 2;
+                            double y = (item.getStart_latitude() + item.getEnd_latitude()) / 2;
                             startEntiiy.setLatitude(y);
                             startEntiiy.setLongitude(x);
                         }
@@ -296,7 +301,7 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
 
             @Override
             protected Tab_Marker jobContent() throws Exception {
-                Tab_Marker tab_marker=LitPalUtils.selectsoloWhere(Tab_Marker.class,"projectId = ? AND wtdh=?",String.valueOf(projectId),s);
+                Tab_Marker tab_marker = LitPalUtils.selectsoloWhere(Tab_Marker.class, "projectId = ? AND wtdh=?", String.valueOf(projectId), s);
                 return tab_marker;
             }
 
@@ -307,5 +312,53 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
         });
 
 
+    }
+
+
+    private String defPath =  "/excel";
+    private String filePath = Environment.getExternalStorageDirectory() +defPath;
+
+    @Override
+    public void outExcel(final Long projectId, final Context mContext) {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Object>() {
+
+            @Override
+            protected Object jobContent() throws Exception {
+                Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class,"id = ?",String.valueOf(projectId));
+                List<Tab_Marker> markers = LitPalUtils.selectWhere(Tab_Marker.class, "projectId=?", String.valueOf(projectId));
+                List<Tab_Line> lines = LitPalUtils.selectWhere(Tab_Line.class, "projectId=?", String.valueOf(projectId));
+                if ((markers == null || markers.size() <= 0)
+                        && (lines == null || lines.size() <= 0)) {
+                    return "导出失败:该工程没有管点数据和管线数据";
+                }
+
+                String table_maker_title = ExcelUtil.tableTitle(Tab_Marker.class);
+                String table_line_title = ExcelUtil.tableTitle(Tab_Line.class);
+
+                table_maker_title = project.getName() + table_maker_title + DateUtils.getCurrentDateTime();
+                table_line_title = project.getName() + table_line_title + DateUtils.getCurrentDateTime();
+
+                 String[] table_maker_names =ExcelUtil.colName(Tab_Marker.class);
+                 String[] table_line_names  =ExcelUtil.colName(Tab_Line.class);
+
+                String makerPath = filePath + "/" + table_maker_title + ".xls";
+                ExcelUtil.initExcel(table_maker_title, makerPath, table_maker_names);
+                ExcelUtil.writeObjListToExcel(markers, makerPath, mContext);
+
+                String linePath = filePath + "/" + table_line_title + ".xls";
+                ExcelUtil.initExcel(table_line_title, linePath, table_line_names);
+                ExcelUtil.writeObjListToExcel(lines, linePath, mContext);
+
+                return "文件已导出到"+defPath+"文件夹中";
+            }
+
+            @Override
+            protected void jobEnd(Object data) {
+//                listener.result(tab_projects);
+                if (getView()!=null&&data!=null){
+                    getView().outExcel((String) data);
+                }
+            }
+        });
     }
 }

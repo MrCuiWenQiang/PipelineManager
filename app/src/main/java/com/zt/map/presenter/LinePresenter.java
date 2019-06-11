@@ -166,7 +166,6 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
         getView().query_remarks(remarks);
     }
 
-/*    @Override
     public void queryUncertainData(final long typeId) {
         queryModel.queryUncertainData(String.valueOf(typeId), new BaseMVPModel.CommotListener<Map<String, Object>>() {
             @Override
@@ -174,6 +173,9 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
                 if (getView() == null) {
                     return;
                 }
+                String[] tgcls=null;
+                String[] pressures=null;
+                String[] directions=null;
                 if (map != null) {
                     List<Sys_TGCL> tgclsl = null;
                     List<Sys_Pressure> pressuresl = null;
@@ -210,7 +212,7 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
                 }
             }
         });
-    }*/
+    }
 
     @Override
     public void queryTopType(final long project, final long type) {
@@ -339,7 +341,8 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
     String[] yl = new String[]{"高压","次高压","中压","低压"};
     @Override
     public void queryShowType(long type) {
-        queryModel.queryFatherType(type, new BaseMVPModel.CommotListener<Map<String, String>>() {
+        getView().showPS(lx);
+/*        queryModel.queryFatherType(type, new BaseMVPModel.CommotListener<Map<String, String>>() {
             @Override
             public void result(Map<String, String> stringStringMap) {
                 if (getView()==null){
@@ -366,7 +369,7 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
                     }
                 }
             }
-        });
+        });*/
     }
 
     public static Map<Long, Double> sortMapByValue(Map<Long, Double> oriMap) {

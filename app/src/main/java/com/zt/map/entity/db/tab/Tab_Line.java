@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.zt.map.entity.db.system.Sys_Color;
 import com.zt.map.entity.db.system.Sys_Table;
+import com.zt.map.util.out.ExcelCount;
+import com.zt.map.util.out.ExcelName;
 
 import org.litepal.crud.LitePalSupport;
 
@@ -16,6 +18,7 @@ import cn.faker.repaymodel.util.db.litpal.LitPalUtils;
 /**
  * 管线表
  */
+@ExcelName(TabName = "管线表")
 public class Tab_Line extends LitePalSupport {
     private long id;
     private long projectId;
@@ -34,31 +37,46 @@ public class Tab_Line extends LitePalSupport {
     private int color =-1;
 
     // TODO: 2019/5/29 起始物号和终止物号 用markerID去查
+    @ExcelCount(order = 2,name = "起点点号")
     private String Qswh;
+    @ExcelCount(order = 3,name = "终点点号")
     private String Zzwh;
 
-
-    private String Gxzl;
+    @ExcelCount(order = 1,name = "管线类型")
+    private String Gxlx;//管线类型
+    @ExcelCount(order = 4,name = "起点埋深")
     private String Qdms;
+    @ExcelCount(order = 5,name = "终点埋深")
     private String Zzms;
+    @ExcelCount(order = 6,name = "埋设方式")
     private String Msfs;
-    private String Gxcl;
-    private String Gjdm;
-    private String Qsdw;
-    private String Dldm;
-    private String Jsnd;
-    private String Fzlx;
+    @ExcelCount(order = 7,name = "管径")
+    private String Gjdm;//管径
+    @ExcelCount(order = 8,name = "材质")
+    private String Gxcl;//材质
+    @ExcelCount(order = 9,name = "流向")
+    private String lx;//流向
+    @ExcelCount(order = 10,name = "起点淤积")
+    private String Qdyj;//起点淤积
+    @ExcelCount(order = 11,name = "终点淤积")
+    private String Zdyj;//终点淤积
+    @ExcelCount(order = 12,name = "运行状态")
+    private String Yxzt;//运行状态
+    @ExcelCount(order = 13,name = "倒虹管段")
+    private String Dhgd;//倒虹管段
+    @ExcelCount(order = 14,name = "建设年代")
+    private String Jsnd;//建设年代
+    @ExcelCount(order = 15,name = "权属单位")
+    private String Qsdw;//权属单位
+    @ExcelCount(order = 16,name = "所在位置")
+    private String Szwz;//所在位置
+    @ExcelCount(order = 17,name = "使用状态")
+    private String Syzt;//使用状态
+    @ExcelCount(order = 18,name = "探测方式")
+    private String tcfs;//探测方式
+    @ExcelCount(order = 19,name = "备注")
     private String Remarks;
-    private String Synd;
-    private String Sjly;
-    private String lx;
-    private String tgcl;
-    private String yl;
-    private String zks;
-    private String yyks;
-    private String dlts;
-    private String tgcc;
-    private String dy;
+
     private Date updateTime;
     private Date createTime;
     public String getQswh() {
@@ -87,45 +105,7 @@ public class Tab_Line extends LitePalSupport {
         }
     }
 
-    public String getZks() {
-        return zks;
-    }
 
-    public void setZks(String zks) {
-        this.zks = zks;
-    }
-
-    public String getYyks() {
-        return yyks;
-    }
-
-    public void setYyks(String yyks) {
-        this.yyks = yyks;
-    }
-
-    public String getDlts() {
-        return dlts;
-    }
-
-    public void setDlts(String dlts) {
-        this.dlts = dlts;
-    }
-
-    public String getTgcc() {
-        return tgcc;
-    }
-
-    public void setTgcc(String tgcc) {
-        this.tgcc = tgcc;
-    }
-
-    public String getDy() {
-        return dy;
-    }
-
-    public void setDy(String dy) {
-        this.dy = dy;
-    }
 
     public long getTypeId() {
         return typeId;
@@ -156,21 +136,7 @@ public class Tab_Line extends LitePalSupport {
         this.lx = lx;
     }
 
-    public String getTgcl() {
-        return tgcl;
-    }
 
-    public void setTgcl(String tgcl) {
-        this.tgcl = tgcl;
-    }
-
-    public String getYl() {
-        return yl;
-    }
-
-    public void setYl(String yl) {
-        this.yl = yl;
-    }
 
     public void setTypeId(long typeId) {
         this.typeId = typeId;
@@ -241,13 +207,7 @@ public class Tab_Line extends LitePalSupport {
         this.end_longitude = end_longitude;
     }
 
-    public String getGxzl() {
-        return Gxzl;
-    }
 
-    public void setGxzl(String gxzl) {
-        Gxzl = gxzl;
-    }
 
     public String getQdms() {
         return Qdms;
@@ -297,13 +257,7 @@ public class Tab_Line extends LitePalSupport {
         Qsdw = qsdw;
     }
 
-    public String getDldm() {
-        return Dldm;
-    }
 
-    public void setDldm(String dldm) {
-        Dldm = dldm;
-    }
 
     public String getJsnd() {
         return Jsnd;
@@ -313,13 +267,6 @@ public class Tab_Line extends LitePalSupport {
         Jsnd = jsnd;
     }
 
-    public String getFzlx() {
-        return Fzlx;
-    }
-
-    public void setFzlx(String fzlx) {
-        Fzlx = fzlx;
-    }
 
     public String getRemarks() {
         return Remarks;
@@ -329,21 +276,7 @@ public class Tab_Line extends LitePalSupport {
         Remarks = remarks;
     }
 
-    public String getSynd() {
-        return Synd;
-    }
 
-    public void setSynd(String synd) {
-        Synd = synd;
-    }
-
-    public String getSjly() {
-        return Sjly;
-    }
-
-    public void setSjly(String sjly) {
-        Sjly = sjly;
-    }
 
     public Date getUpdateTime() {
         return updateTime;
@@ -359,5 +292,70 @@ public class Tab_Line extends LitePalSupport {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+
+    public String getGxlx() {
+        return Gxlx;
+    }
+
+    public void setGxlx(String gxlx) {
+        Gxlx = gxlx;
+    }
+
+    public String getQdyj() {
+        return Qdyj;
+    }
+
+    public void setQdyj(String qdyj) {
+        Qdyj = qdyj;
+    }
+
+    public String getZdyj() {
+        return Zdyj;
+    }
+
+    public void setZdyj(String zdyj) {
+        Zdyj = zdyj;
+    }
+
+    public String getYxzt() {
+        return Yxzt;
+    }
+
+    public void setYxzt(String yxzt) {
+        Yxzt = yxzt;
+    }
+
+    public String getDhgd() {
+        return Dhgd;
+    }
+
+    public void setDhgd(String dhgd) {
+        Dhgd = dhgd;
+    }
+
+    public String getSzwz() {
+        return Szwz;
+    }
+
+    public void setSzwz(String szwz) {
+        Szwz = szwz;
+    }
+
+    public String getSyzt() {
+        return Syzt;
+    }
+
+    public void setSyzt(String syzt) {
+        Syzt = syzt;
+    }
+
+    public String getTcfs() {
+        return tcfs;
+    }
+
+    public void setTcfs(String tcfs) {
+        this.tcfs = tcfs;
     }
 }

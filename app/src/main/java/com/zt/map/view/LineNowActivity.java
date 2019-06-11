@@ -30,7 +30,7 @@ import cn.faker.repaymodel.util.ToastUtility;
 /**
  * 管线编辑
  */
-public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresenter> implements LineContract.View, View.OnClickListener {
+public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePresenter> implements LineContract.View, View.OnClickListener {
 
     private static final String KEY_ID = "KEY_ID";
     private static final String PROJECT_ID = "PROJECT_ID";
@@ -42,53 +42,44 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
     public static final String KEY_ENDLATLNG_X = "KEY_ENDLATLNG_X";
     public static final String KEY_ENDLATLNG_Y = "KEY_ENDLATLNG_Y";
 
-
-    private EditText tvGxzl;
-    private ImageView ivLoadGxzl;
+    private EditText tvGxlx;
+    private ImageView ivLoadGxlx;
     private EditText tvQswh;
     private EditText tvZzwh;
     private EditText tvQdms;
     private EditText tvZzms;
     private EditText tvMsfs;
     private ImageView ivLoadMsfs;
-    private EditText tvGxcl;
     private EditText tvGjdm;
-    private EditText tvQsdw;
-    private ImageView ivLoadQsdw;
-    private EditText tvDldm;
-    private ImageView ivLoadDldm;
-    private EditText tvJsnd;
-    private EditText tvFzlx;
-    private EditText tvRemarks;
-    private ImageView ivLoadRemarks;
-    private EditText tvSynd;
-    private EditText tvSjly;
+    private EditText tvGxcl;
+    private ImageView ivLoadGxcl;
+    private LinearLayout llLx;
     private EditText tvLx;
     private ImageView ivLoadLx;
-    private EditText tvTgcl;
-    private ImageView ivLoadTgcl;
-    private EditText tvYl;
-    private ImageView ivLoadYl;
-    private EditText tvsy;
-    private ImageView ivLoadsy;
-    private LinearLayout ll_lx;
-    private LinearLayout ll_tgcl;
-    private LinearLayout ll_yl;
-    private LinearLayout ll_sy;
+    private LinearLayout llQdyj;
+    private EditText tvQdyj;
+    private LinearLayout llZdyj;
+    private EditText tvZdyj;
+    private EditText tvYxzt;
+    private ImageView ivLoadYxzt;
+    private EditText tvDhgd;
+    private ImageView ivLoadDhgd;
+    private EditText tvJsnd;
+    private EditText tvQsdw;
+    private EditText tvSzwz;
+    private ImageView ivLoadSzwz;
+    private EditText tvSyzt;
+    private ImageView ivLoadSyzt;
+    private EditText tvTcfs;
+    private ImageView ivLoadTcfs;
+    private EditText tvRemarks;
+
+
+
+
 
     private TextView tvSave;
     private TextView tvExit;
-
-    private LinearLayout ll_zks;
-    private LinearLayout ll_yyks;
-    private LinearLayout ll_dlts;
-    private LinearLayout ll_tgcc;
-
-    private EditText tv_zks;
-    private EditText tv_yyks;
-    private EditText tv_dlts;
-    private EditText tv_tgcc;
-
 
     private long projectId;
     private long typeId;
@@ -117,7 +108,7 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
     public static void newInstance(Activity activity, long lineId, int requestCode) {
         Bundle args = new Bundle();
         args.putLong(KEY_ID, lineId);
-        Intent intent = new Intent(activity, LineActivity.class);
+        Intent intent = new Intent(activity, LineNowActivity.class);
         intent.putExtras(args);
         activity.startActivityForResult(intent, requestCode);
     }
@@ -125,59 +116,46 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
 
     @Override
     protected int getLayoutContentId() {
-        return R.layout.ac_line;
+        return R.layout.ac_now_line;
     }
 
     @Override
     protected void initContentView() {
-        tvGxzl = findViewById(R.id.tv_gxzl);
-        ivLoadGxzl = findViewById(R.id.iv_load_gxzl);
+        tvGxlx = findViewById(R.id.tv_gxlx);
+        ivLoadGxlx = findViewById(R.id.iv_load_gxlx);
         tvQswh = findViewById(R.id.tv_qswh);
         tvZzwh = findViewById(R.id.tv_zzwh);
         tvQdms = findViewById(R.id.tv_qdms);
         tvZzms = findViewById(R.id.tv_zzms);
         tvMsfs = findViewById(R.id.tv_msfs);
         ivLoadMsfs = findViewById(R.id.iv_load_msfs);
-        tvGxcl = findViewById(R.id.tv_gxcl);
         tvGjdm = findViewById(R.id.tv_gjdm);
-        tvQsdw = findViewById(R.id.tv_qsdw);
-        ivLoadQsdw = findViewById(R.id.iv_load_qsdw);
-        tvDldm = findViewById(R.id.tv_dldm);
-        ivLoadDldm = findViewById(R.id.iv_load_dldm);
-        tvJsnd = findViewById(R.id.tv_jsnd);
-        tvFzlx = findViewById(R.id.tv_fzlx);
-        tvRemarks = findViewById(R.id.tv_remarks);
-        ivLoadRemarks = findViewById(R.id.iv_load_remarks);
-        tvSynd = findViewById(R.id.tv_synd);
-        tvSjly = findViewById(R.id.tv_sjly);
+        tvGxcl = findViewById(R.id.tv_gxcl);
+        ivLoadGxcl = findViewById(R.id.iv_load_gxcl);
+        llLx = findViewById(R.id.ll_lx);
         tvLx = findViewById(R.id.tv_lx);
         ivLoadLx = findViewById(R.id.iv_load_lx);
-        tvTgcl = findViewById(R.id.tv_tgcl);
-        ivLoadTgcl = findViewById(R.id.iv_load_tgcl);
-        tvYl = findViewById(R.id.tv_yl);
-        ivLoadYl = findViewById(R.id.iv_load_yl);
-        ll_lx = findViewById(R.id.ll_lx);
-        ll_tgcl = findViewById(R.id.ll_tgcl);
-        ll_yl = findViewById(R.id.ll_yl);
-
-        tvsy = findViewById(R.id.tv_sy);
-        ivLoadsy = findViewById(R.id.iv_load_sy);
-        ll_sy = findViewById(R.id.ll_sy);
+        llQdyj = findViewById(R.id.ll_qdyj);
+        tvQdyj = findViewById(R.id.tv_qdyj);
+        llZdyj = findViewById(R.id.ll_zdyj);
+        tvZdyj = findViewById(R.id.tv_zdyj);
+        tvYxzt = findViewById(R.id.tv_yxzt);
+        ivLoadYxzt = findViewById(R.id.iv_load_yxzt);
+        tvDhgd = findViewById(R.id.tv_dhgd);
+        ivLoadDhgd = findViewById(R.id.iv_load_dhgd);
+        tvJsnd = findViewById(R.id.tv_jsnd);
+        tvQsdw = findViewById(R.id.tv_qsdw);
+        tvSzwz = findViewById(R.id.tv_szwz);
+        ivLoadSzwz = findViewById(R.id.iv_load_szwz);
+        tvSyzt = findViewById(R.id.tv_syzt);
+        ivLoadSyzt = findViewById(R.id.iv_load_syzt);
+        tvTcfs = findViewById(R.id.tv_tcfs);
+        ivLoadTcfs = findViewById(R.id.iv_load_tcfs);
+        tvRemarks = findViewById(R.id.tv_remarks);
 
 
         tvSave = findViewById(R.id.tv_save);
         tvExit = findViewById(R.id.tv_exit);
-
-
-        ll_zks = findViewById(R.id.ll_zks);
-        ll_yyks = findViewById(R.id.ll_yyks);
-        ll_dlts = findViewById(R.id.ll_dlts);
-        ll_tgcc = findViewById(R.id.ll_tgcc);
-
-        tv_zks = findViewById(R.id.tv_zks);
-        tv_yyks = findViewById(R.id.tv_yyks);
-        tv_dlts = findViewById(R.id.tv_dlts);
-        tv_tgcc = findViewById(R.id.tv_tgcc);
     }
 
     @Override
@@ -210,14 +188,9 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
     @Override
     protected void initListener() {
         super.initListener();
-        ivLoadGxzl.setOnClickListener(this);
         ivLoadMsfs.setOnClickListener(this);
-        ivLoadRemarks.setOnClickListener(this);
 
         ivLoadLx.setOnClickListener(this);
-        ivLoadTgcl.setOnClickListener(this);
-        ivLoadYl.setOnClickListener(this);
-        ivLoadsy.setOnClickListener(this);
 
         tvSave.setOnClickListener(this);
         tvExit.setOnClickListener(this);
@@ -230,14 +203,8 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_load_remarks: {
-                mPresenter.query_remarks(typeId);
-                break;
-            }
-            case R.id.iv_load_gxzl: {
-                mPresenter.queryType(typeId);
-                break;
-            }
+
+
             case R.id.iv_load_msfs: {
                 mPresenter.queryMsfs(typeId);
                 break;
@@ -246,18 +213,7 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
                 selectValue(tvLx, directions);
                 break;
             }
-            case R.id.iv_load_tgcl: {
-                selectValue(tvTgcl, tgcls);
 
-                break;
-            }
-            case R.id.iv_load_yl: {
-                selectValue(tvYl, pressures);
-                break;
-            } case R.id.iv_load_sy: {
-                selectValue(tvsy, dy);
-                break;
-            }
             case R.id.tv_save: {
                 save();
                 break;
@@ -287,38 +243,26 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
         tab_line.setEnd_latitude(end_latitude);
         tab_line.setEnd_longitude(end_longitude);
 
-        tab_line.setGxzl(getValue(tvGxzl));
+        tab_line.setGxlx(getValue(tvGxlx));
         tab_line.setQdms(getValue(tvQdms));
         tab_line.setZzms(getValue(tvZzms));
         tab_line.setMsfs(getValue(tvMsfs));
-        tab_line.setGxcl(getValue(tvGxcl));
         tab_line.setGjdm(getValue(tvGjdm));
-        tab_line.setQsdw(getValue(tvQsdw));
-        tab_line.setDldm(getValue(tvDldm));
+        tab_line.setGxcl(getValue(tvGxcl));
+
+        tab_line.setLx(getValue(tvLx));
+
+        tab_line.setQdyj(getValue(tvQdyj));
+        tab_line.setZdyj(getValue(tvZdyj));
+        tab_line.setYxzt(getValue(tvYxzt));
+        tab_line.setDhgd(getValue(tvDhgd));
         tab_line.setJsnd(getValue(tvJsnd));
-        tab_line.setFzlx(getValue(tvFzlx));
+        tab_line.setQsdw(getValue(tvQsdw));
+        tab_line.setSzwz(getValue(tvSzwz));
+        tab_line.setSyzt(getValue(tvSyzt));
+        tab_line.setTcfs(getValue(tvTcfs));
+
         tab_line.setRemarks(getValue(tvRemarks));
-        tab_line.setSynd(getValue(tvSynd));
-        tab_line.setSjly(getValue(tvSjly));
-
-        tab_line.setDy(getValue(tvsy));
-        tab_line.setZks(getValue(tv_zks));
-        tab_line.setYyks(getValue(tv_yyks));
-        tab_line.setDlts(getValue(tv_dlts));
-        tab_line.setTgcl(getValue(tv_tgcc));
-
-        if (ll_yl.getVisibility() == View.VISIBLE) {
-            tab_line.setYl(getValue(tvYl));
-        }
-
-        if (ll_tgcl.getVisibility() == View.VISIBLE) {
-            tab_line.setTgcl(getValue(tvTgcl));
-        }
-
-        if (ll_lx.getVisibility() == View.VISIBLE) {
-            tab_line.setLx(getValue(tvLx));
-        }
-
 
         tab_line.setUpdateTime(new Date());
 
@@ -352,34 +296,29 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
         end_longitude = tabLine.getEnd_longitude();
 
 
-        tvGxzl.setText(tabLine.getGxzl());
         tvQswh.setText(tabLine.getQswh());
         tvQswh.setTag(tabLine.getStartMarkerId());
         tvZzwh.setText(tabLine.getZzwh());
         tvZzwh.setTag(tabLine.getEndMarkerId());
+
         tvQdms.setText(tabLine.getQdms());
         tvZzms.setText(tabLine.getZzms());
         tvMsfs.setText(tabLine.getMsfs());
-        tvGxcl.setText(tabLine.getGxcl());
         tvGjdm.setText(tabLine.getGjdm());
-        tvQsdw.setText(tabLine.getQsdw());
-        tvDldm.setText(tabLine.getDldm());
+        tvGxcl.setText(tabLine.getGxcl());
+        tvLx.setText(tabLine.getLx());
+
+        tvQdyj.setText(tabLine.getQdyj());
+        tvZdyj.setText(tabLine.getZdyj());
+        tvYxzt.setText(tabLine.getYxzt());
+        tvDhgd.setText(tabLine.getDhgd());
         tvJsnd.setText(tabLine.getJsnd());
-        tvFzlx.setText(tabLine.getFzlx());
+        tvQsdw.setText(tabLine.getQsdw());
+        tvSzwz.setText(tabLine.getSzwz());
+        tvSyzt.setText(tabLine.getSyzt());
+        tvTcfs.setText(tabLine.getTcfs());
+
         tvRemarks.setText(tabLine.getRemarks());
-        tvSynd.setText(tabLine.getSynd());
-        tvSjly.setText(tabLine.getSjly());
-
-        tvYl.setText(tabLine.getYl());
-        tvTgcl.setText(tabLine.getTgcl());
-        tvLx.setText(tab_line.getLx());
-
-        tvsy.setText(tabLine.getDy());
-        tv_zks.setText(tabLine.getZks());
-        tv_yyks.setText(tabLine.getYyks());
-        tv_dlts.setText(tabLine.getDlts());
-        tv_tgcc.setText(tabLine.getTgcl());
-
 
 //        mPresenter.queryUncertainData(typeId);
         mPresenter.queryShowType(typeId);
@@ -397,7 +336,7 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
 
     @Override
     public void query_LineType(String[] items) {
-        selectValue(tvGxzl, items);
+//        selectValue(tvGxzl, items);
     }
 
     @Override
@@ -410,61 +349,64 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
         dimiss();
         if (tabLine == null) return;
 
-        tvGxzl.setText(tabLine.getGxzl());
         tvQdms.setText(tabLine.getQdms());
         tvZzms.setText(tabLine.getZzms());
         tvMsfs.setText(tabLine.getMsfs());
-        tvGxcl.setText(tabLine.getGxcl());
         tvGjdm.setText(tabLine.getGjdm());
-        tvQsdw.setText(tabLine.getQsdw());
-        tvDldm.setText(tabLine.getDldm());
+        tvGxcl.setText(tabLine.getGxcl());
+        tvLx.setText(tabLine.getLx());
+
+        tvQdyj.setText(tabLine.getQdyj());
+        tvZdyj.setText(tabLine.getZdyj());
+        tvYxzt.setText(tabLine.getYxzt());
+        tvDhgd.setText(tabLine.getDhgd());
         tvJsnd.setText(tabLine.getJsnd());
-        tvFzlx.setText(tabLine.getFzlx());
-        tvRemarks.setText(tabLine.getRemarks());
-        tvSynd.setText(tabLine.getSynd());
-        tvSjly.setText(tabLine.getSjly());
+        tvQsdw.setText(tabLine.getQsdw());
+        tvSzwz.setText(tabLine.getSzwz());
+        tvSyzt.setText(tabLine.getSyzt());
+        tvTcfs.setText(tabLine.getTcfs());
     }
 
     @Override
     public void queryUncertainData(String[] tgcls, String[] pressures, String[] directions) {
-        this.tgcls = tgcls;
-        this.pressures = pressures;
-        this.directions = directions;
-        if (directions != null && directions.length > 0) {
-            ll_lx.setVisibility(View.VISIBLE);
-        }
-        if (tgcls != null && tgcls.length > 0) {
-            ll_tgcl.setVisibility(View.VISIBLE);
-        }
-        if (pressures != null && pressures.length > 0) {
-            ll_yl.setVisibility(View.VISIBLE);
-        }
+//        this.tgcls = tgcls;
+//        this.pressures = pressures;
+//        this.directions = directions;
+//        if (directions != null && directions.length > 0) {
+//            ll_lx.setVisibility(View.VISIBLE);
+//        }
+//        if (tgcls != null && tgcls.length > 0) {
+//            ll_tgcl.setVisibility(View.VISIBLE);
+//        }
+//        if (pressures != null && pressures.length > 0) {
+//            ll_yl.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
     public void showDX() {
-        ll_zks.setVisibility(View.VISIBLE);
-        ll_yyks.setVisibility(View.VISIBLE);
-        ll_dlts.setVisibility(View.VISIBLE);
-        ll_tgcc.setVisibility(View.VISIBLE);
+//        ll_zks.setVisibility(View.VISIBLE);
+//        ll_yyks.setVisibility(View.VISIBLE);
+//        ll_dlts.setVisibility(View.VISIBLE);
+//        ll_tgcc.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showDL(String[] dy) {
         this.dy = dy;
-        ll_sy.setVisibility(View.VISIBLE);
+//        ll_sy.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showPS(String[] lx) {
         this.directions = lx;
-            ll_lx.setVisibility(View.VISIBLE);
+//            ll_lx.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showRQ(String[] yl) {
         this.pressures = yl;
-        ll_yl.setVisibility(View.VISIBLE);
+//        ll_yl.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -494,6 +436,10 @@ public class LineActivity extends BaseMVPAcivity<LineContract.View, LinePresente
 
 
     private void selectValue(final TextView tv, final String[] items) {
+        if (items==null||items.length<=0){
+            ToastUtility.showToast("暂无分类");
+            return;
+        }
         ArrayAdapter adapter = new ArrayAdapter<>(getContext(), R.layout.v_tablist, new ArrayList<>(Arrays.asList(items)));
         final QMUIListPopup mListPopup = new QMUIListPopup(getContext(), QMUIPopup.DIRECTION_BOTTOM, adapter);
         mListPopup.create(tv.getWidth(), QMUIDisplayHelper.dp2px(getContext(), 200),
