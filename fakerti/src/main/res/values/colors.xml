@@ -43,5 +43,9 @@
     <color name="select_ddcolor">#C95FB878</color>
     <color name="windowBackground">#00FFFFFF</color>
     <color name="gold">#ffd700</color>
-
+    <color name="blue_1">#0197F6</color>
+    <color name="blue_3">#4A7DF7</color>
+    <color name="blue_2">#C80197F6</color>
+    <color name="lacteus">#FDFFFC</color>
+    <color name="lacteus_1">#FEFFFE</color>
 </resources>

@@ -6,15 +6,14 @@ PS
 RQ
 RL
 GY
+ZH
+BM
 [DL]
 供电=GD
 路灯=LD
-电车=DC
 交通信号=XH
 设施=SS
 [DX]
-广播=ZB
-电视=DS
 通信=TX
 军用=JY
 监控=JK
@@ -29,8 +28,6 @@ GY
 污水=WS
 雨污合流=HS
 [RQ]
-煤气=MQ
-液化气=YH
 天然气=TR
 [RL]
 蒸汽=ZQ
@@ -43,3 +40,7 @@ GY
 灰水=GH
 航空煤油=MY
 其他=QT
+[ZH]
+综合管廊=ZH
+[BM]
+不明管线=BM

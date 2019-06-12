@@ -20,7 +20,6 @@ import cn.faker.repaymodel.util.LogUtil;
 public class FileReadOpen {
 
 
-
     public static Data readText(InputStream file) throws IOException {
         if (file == null) {
             throw new RuntimeException("配置表不存在!");
@@ -72,13 +71,16 @@ public class FileReadOpen {
                     if (childTab == null) {
                         throw new RuntimeException("配置表不合法！ 请按照格式填写");
                     }
-                    LogUtil.e("-------TAB NAME-------",childTab);
+                    LogUtil.e("-------TAB NAME-------", childTab);
+                    if (!map.containsKey(childTab)){
+                        continue;
+                    }
                     Map<String, List<Table>> f_m = map.get(childTab);
                     List<Table> ds = f_m.get(childTabName);
                     if (ds == null) {
                         ds = new LinkedList<>();
                     }
-                    ds.add(new Table(key,value));
+                    ds.add(new Table(key, value));
                     f_m.put(childTabName, ds);
                 }
             }
@@ -87,70 +89,109 @@ public class FileReadOpen {
     }
 
 
-    public static  Map<String,String> readIcon(InputStream file) throws IOException {
+    public static Map<String, String> readIcon(InputStream file) throws IOException {
         if (file == null) {
             throw new RuntimeException("配置表不存在!");
         }
-        Map<String,String> params = new LinkedHashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         InputStreamReader insr = new InputStreamReader(file, "utf-8");
         BufferedReader bReader = new BufferedReader(insr);
         String str;
-        while ((str = bReader.readLine()) != null){
+        while ((str = bReader.readLine()) != null) {
             str = str.trim();
             int index = str.indexOf("=");
             String key = str.substring(0, index);
             String value = str.substring(index + 1, str.length());
-            params.put(key,value);
+            params.put(key, value);
         }
         return params;
     }
 
-
-    public static  Map<String,Map<String,String>> readType(InputStream file) throws IOException {
+    public static Map<String, Map<String, String>> readTZORFSW(InputStream file) throws IOException {
         if (file == null) {
             throw new RuntimeException("配置表不存在!");
         }
-        InputStreamReader inst = new InputStreamReader(file,"utf-8");
+
+        Map<String, Map<String, String>> fatherMap = new LinkedHashMap<>();
+
+        InputStreamReader insr = new InputStreamReader(file, "utf-8");
+        BufferedReader bReader = new BufferedReader(insr);
+        String str;
+        String tag = null;
+        Map<String, String> childMap = new LinkedHashMap<>();
+        while ((str = bReader.readLine()) != null) {
+            str = str.trim();
+            int index = str.indexOf("=");
+            String key = str.substring(0, index);
+            String father = str.substring(index + 1, str.length());
+
+            int i_index = father.indexOf("=");
+            String child = father.substring(0, i_index);
+            String base = father.substring(i_index + 1, father.length());
+
+            if (tag == null) {
+                tag = key;
+            }
+
+            if (tag.equals(key)) {
+                childMap.put(child, base);
+            } else {
+                fatherMap.put(tag, childMap);
+                tag = key;
+                childMap = new LinkedHashMap<>();
+                childMap.put(child, base);
+            }
+        }
+        return fatherMap;
+    }
+
+
+    public static Map<String, Map<String, String>> readType(InputStream file) throws IOException {
+        if (file == null) {
+            throw new RuntimeException("配置表不存在!");
+        }
+        InputStreamReader inst = new InputStreamReader(file, "utf-8");
         BufferedReader bReader = new BufferedReader(inst);
         String str;
         boolean isType = false;//是否是读取大类阶段
 
-        Map<String,Map<String,String>> maps = new HashMap<>();
-        Map<String,String> params = new HashMap<>();
+        Map<String, Map<String, String>> maps = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
 
-        while ((str=bReader.readLine())!=null){
-            if (str.startsWith("[")){
+        while ((str = bReader.readLine()) != null) {
+            if (str.startsWith("[")) {
                 int end = str.indexOf("]");
                 if (end <= 0) {
                     throw new RuntimeException("类型名称不规范!");
                 }
                 String table = str.substring(1, end); //类型名称
-                if (table.equals("管线大类")){
+
+                if (table.equals("管线大类")) {
                     isType = true;
-                }else {
+                } else {
                     isType = false;
-                    if (!maps.containsKey(table)){
+                    if (!maps.containsKey(table)) {
                         throw new RuntimeException("配置表缺失");
-                    }else {
+                    } else {
                         params = maps.get(table);
                     }
                 }
-            }else if (isType){
-                String value = str.trim();
-                maps.put(value,new HashMap<String, String>());
-            }else {
+            } else if (isType) {
+                String text = str.trim();
+                maps.put(text, new HashMap<String, String>());
+            } else {
                 int index = str.indexOf("=");
                 String key = str.substring(0, index);
                 String value = str.substring(index + 1, str.length());
-                params.put(key,value);
+                params.put(key, value);
             }
         }
         return maps;
     }
 
-    public static class Data{
+    public static class Data {
         private Map<String, Map<String, List<Table>>> map;
-        private Map<String, String> fatherMap ;//管线种类
+        private Map<String, String> fatherMap;//管线种类
 
         public Map<String, Map<String, List<Table>>> getMap() {
             return map;

@@ -17,7 +17,8 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <LinearLayout style="@style/edit_ll">
+            <LinearLayout style="@style/edit_ll"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/edit_title"

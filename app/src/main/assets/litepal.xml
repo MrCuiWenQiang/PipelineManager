@@ -22,6 +22,8 @@
         <mapping class="com.zt.map.entity.db.system.Sys_Type"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Type_Child"/>
 
+        <mapping class="com.zt.map.entity.db.tab.TabUser"/>
+
         <mapping class="com.zt.map.entity.db.tab.Tab_Project"/>
         <mapping class="com.zt.map.entity.db.tab.Tab_Marker"/>
         <mapping class="com.zt.map.entity.db.tab.Tab_Line"/>

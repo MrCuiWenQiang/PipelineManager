@@ -55,7 +55,9 @@ public class SystemQueryModel extends BaseMVPModel {
             protected List<Sys_Features> jobContent() throws Exception {
                 Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class,"id = ?",code);
                 if (tables!=null){
-                    List<Sys_Features> datas = LitPalUtils.selectWhere(Sys_Features.class,"fatherCode = ?",tables.getCode());
+                    Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
+
+                    List<Sys_Features> datas = LitPalUtils.selectWhere(Sys_Features.class,"fatherCode = ?",f.getFatherCode());
                     return datas;
                 }
                     return null;
@@ -81,7 +83,8 @@ public class SystemQueryModel extends BaseMVPModel {
             protected List<Sys_Appendages> jobContent() throws Exception {
                 Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class,"id = ?",code);
                 if (tables!=null){
-                    List<Sys_Appendages> datas = LitPalUtils.selectWhere(Sys_Appendages.class,"fatherCode = ?",tables.getCode());
+                    Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
+                    List<Sys_Appendages> datas = LitPalUtils.selectWhere(Sys_Appendages.class,"fatherCode = ?",f.getFatherCode());
                     return datas;
                 }
                 return null;
@@ -231,12 +234,12 @@ public class SystemQueryModel extends BaseMVPModel {
      * @param code
      * @param listener
      */
-    public void queryUseStatus(final String code,final CommotListener<List<Sys_UseStatus>> listener) {
+    public void queryUseStatus(final long code, final CommotListener<List<Sys_UseStatus>> listener) {
         DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<List<Sys_UseStatus>>() {
 
             @Override
             protected List<Sys_UseStatus> jobContent() throws Exception {
-                Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class,"id = ?",code);
+                Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class,"id = ?",String.valueOf(code));
                 if (tables!=null){
                     List<Sys_UseStatus> datas = LitPalUtils.selectWhere(Sys_UseStatus.class,"fatherCode = ?",tables.getCode());
                     return datas;

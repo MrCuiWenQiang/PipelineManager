@@ -10,6 +10,7 @@ public class Sys_Type_Child extends LitePalSupport {
     private String name;
     private String value;
     private String fatherCode;
+    private String fatherName;
 
     public long getId() {
         return id;
@@ -37,6 +38,14 @@ public class Sys_Type_Child extends LitePalSupport {
 
     public String getFatherCode() {
         return fatherCode;
+    }
+
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
     }
 
     public void setFatherCode(String fatherCode) {

@@ -104,6 +104,7 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     private ImageView ivLoadSyzt;
     private EditText tvTcfs;
     private ImageView ivLoadTcfs;
+    private ImageView ivLoadGxlx;
     private EditText tvRemarks;
 
     private TextView tvSave;
@@ -153,6 +154,7 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tvTcfs = findViewById(R.id.tv_tcfs);
         ivLoadTcfs = findViewById(R.id.iv_load_tcfs);
         tvRemarks = findViewById(R.id.tv_remarks);
+        ivLoadGxlx = findViewById(R.id.iv_load_gxlx);
 
         tvSave = findViewById(R.id.tv_save);
         tvExit = findViewById(R.id.tv_exit);
@@ -187,6 +189,9 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tvExit.setOnClickListener(this);
         ivLoadTzd.setOnClickListener(this);
         ivLoadFsw.setOnClickListener(this);
+        ivLoadGxlx.setOnClickListener(this);
+        ivLoadJgcz.setOnClickListener(this);
+        ivLoadSyzt.setOnClickListener(this);
 
     }
 
@@ -239,6 +244,10 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_load_gxlx: {
+                mPresenter.queryType(typeId);
+                break;
+            }
             case R.id.iv_load_tzd: {
                 mPresenter.query_tzd(typeId);
                 break;
@@ -247,7 +256,14 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
                 mPresenter.query_fsw(typeId);
                 break;
             }
-
+            case R.id.iv_load_jgcz: {
+                mPresenter.querymanhole(typeId);
+                break;
+            }
+            case R.id.iv_load_syzt: {
+                mPresenter.queryUseStatus(typeId);
+                break;
+            }
             case R.id.tv_save: {
                 save();
                 break;
@@ -415,6 +431,21 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
             return;
         }
         PhotoUtil.openZKCamera(MarkerNowActivity.this,project);
+    }
+
+    @Override
+    public void query_LineType(String[] items) {
+        selectValue(tvGxlx, items);
+    }
+
+    @Override
+    public void querymanhole(String[] items) {
+        selectValue(tvJgcz, items);
+    }
+
+    @Override
+    public void queryUseStatus(String[] items) {
+        selectValue(tvSyzt, items);
     }
 
     private void selectValue(final TextView tv, final String[] items) {

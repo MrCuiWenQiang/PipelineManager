@@ -16,7 +16,8 @@
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-            <LinearLayout style="@style/edit_ll">
+            <LinearLayout style="@style/edit_ll"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/edit_title"
@@ -157,7 +158,7 @@
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout style="@style/edit_ll" android:id="@+id/ll_lx"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     style="@style/edit_title"
@@ -187,6 +188,7 @@
             </LinearLayout>
 
             <LinearLayout style="@style/edit_ll"
+                android:visibility="gone"
                 android:id="@+id/ll_qdyj">
 
                 <TextView
@@ -199,6 +201,7 @@
             </LinearLayout>
 
             <LinearLayout style="@style/edit_ll"
+                android:visibility="gone"
                 android:id="@+id/ll_zdyj">
 
                 <TextView
@@ -239,7 +242,9 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout style="@style/edit_ll">
+            <LinearLayout style="@style/edit_ll"
+                android:visibility="gone"
+                android:id="@+id/ll_dhgd">
 
                 <TextView
                     style="@style/edit_title"

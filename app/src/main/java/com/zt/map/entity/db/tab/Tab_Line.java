@@ -5,6 +5,8 @@ import android.text.TextUtils;
 
 import com.zt.map.entity.db.system.Sys_Color;
 import com.zt.map.entity.db.system.Sys_Table;
+import com.zt.map.entity.db.system.Sys_Type;
+import com.zt.map.util.out.AccessTableName;
 import com.zt.map.util.out.ExcelCount;
 import com.zt.map.util.out.ExcelName;
 
@@ -18,6 +20,7 @@ import cn.faker.repaymodel.util.db.litpal.LitPalUtils;
 /**
  * 管线表
  */
+@AccessTableName(name = "JS_LINE")
 @ExcelName(TabName = "管线表")
 public class Tab_Line extends LitePalSupport {
     private long id;
@@ -296,7 +299,12 @@ public class Tab_Line extends LitePalSupport {
 
 
     public String getGxlx() {
-        return Gxlx;
+        Sys_Type type = LitPalUtils.selectsoloWhere(Sys_Type.class,"id=?",String.valueOf(typeId));
+        if (type!=null){
+            return type.getName();
+        }else {
+            return null;
+        }
     }
 
     public void setGxlx(String gxlx) {

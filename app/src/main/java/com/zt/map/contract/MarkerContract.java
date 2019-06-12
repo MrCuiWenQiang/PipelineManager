@@ -26,6 +26,9 @@ public class MarkerContract {
         void createPhoto();
 
         void queryProjectName(String project);
+        void query_LineType(String[] items);
+        void querymanhole(String[] items);
+        void queryUseStatus(String[] items);
     }
 
     public interface Presenter {

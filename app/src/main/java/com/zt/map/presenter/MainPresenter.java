@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.text.Editable;
 import android.text.TextUtils;
 
+import com.zt.map.R;
 import com.zt.map.contract.MainContract;
 import com.zt.map.entity.db.TaggingEntiiy;
 import com.zt.map.entity.db.system.Sys_Color;
@@ -15,6 +16,8 @@ import com.zt.map.entity.db.tab.Tab_Marker;
 import com.zt.map.entity.db.tab.Tab_Project;
 import com.zt.map.model.MainModel;
 import com.zt.map.model.SystemQueryModel;
+import com.zt.map.util.out.AccessFileOut;
+import com.zt.map.util.out.AccessUtil;
 import com.zt.map.util.out.ExcelName;
 import com.zt.map.util.out.ExcelUtil;
 
@@ -315,8 +318,8 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
     }
 
 
-    private String defPath =  "/excel";
-    private String filePath = Environment.getExternalStorageDirectory() +defPath;
+    private String defPath = "/excel";
+    private String filePath = Environment.getExternalStorageDirectory() + defPath;
 
     @Override
     public void outExcel(final Long projectId, final Context mContext) {
@@ -324,7 +327,7 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
 
             @Override
             protected Object jobContent() throws Exception {
-                Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class,"id = ?",String.valueOf(projectId));
+                Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class, "id = ?", String.valueOf(projectId));
                 List<Tab_Marker> markers = LitPalUtils.selectWhere(Tab_Marker.class, "projectId=?", String.valueOf(projectId));
                 List<Tab_Line> lines = LitPalUtils.selectWhere(Tab_Line.class, "projectId=?", String.valueOf(projectId));
                 if ((markers == null || markers.size() <= 0)
@@ -338,8 +341,8 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
                 table_maker_title = project.getName() + table_maker_title + DateUtils.getCurrentDateTime();
                 table_line_title = project.getName() + table_line_title + DateUtils.getCurrentDateTime();
 
-                 String[] table_maker_names =ExcelUtil.colName(Tab_Marker.class);
-                 String[] table_line_names  =ExcelUtil.colName(Tab_Line.class);
+                String[] table_maker_names = ExcelUtil.colName(Tab_Marker.class);
+                String[] table_line_names = ExcelUtil.colName(Tab_Line.class);
 
                 String makerPath = filePath + "/" + table_maker_title + ".xls";
                 ExcelUtil.initExcel(table_maker_title, makerPath, table_maker_names);
@@ -349,16 +352,50 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
                 ExcelUtil.initExcel(table_line_title, linePath, table_line_names);
                 ExcelUtil.writeObjListToExcel(lines, linePath, mContext);
 
-                return "文件已导出到"+defPath+"文件夹中";
+                return "文件已导出到" + defPath + "文件夹中";
             }
 
             @Override
             protected void jobEnd(Object data) {
 //                listener.result(tab_projects);
-                if (getView()!=null&&data!=null){
+                if (getView() != null && data != null) {
                     getView().outExcel((String) data);
                 }
             }
         });
     }
+
+    @Deprecated
+    @Override
+    public void outAccess(final Long projectId, final Context mContext) {
+       /* DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Object>() {
+
+            @Override
+            protected Object jobContent() throws Exception {
+                Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class, "id = ?", String.valueOf(projectId));
+                List<Tab_Marker> markers = LitPalUtils.selectWhere(Tab_Marker.class, "projectId=?", String.valueOf(projectId));
+                List<Tab_Line> lines = LitPalUtils.selectWhere(Tab_Line.class, "projectId=?", String.valueOf(projectId));
+                if ((markers == null || markers.size() <= 0)
+                        && (lines == null || lines.size() <= 0)) {
+                    return "导出失败:该工程没有管点数据和管线数据";
+                }
+                String name = project.getName()  + DateUtils.getCurrentDateTime()+".mdb";
+                String path = AccessFileOut.copyAccess(mContext, R.raw.template,name);
+                AccessUtil.insert(markers,path);
+
+
+                return "文件已导出到" + defPath + "文件夹中";
+            }
+
+            @Override
+            protected void jobEnd(Object data) {
+//                listener.result(tab_projects);
+                if (getView() != null && data != null) {
+                    getView().outExcel((String) data);
+                }
+            }
+        });*/
+    }
+
+
 }

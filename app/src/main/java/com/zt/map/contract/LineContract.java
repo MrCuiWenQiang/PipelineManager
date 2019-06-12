@@ -32,7 +32,8 @@ public class LineContract {
         void showDL(String[] dy);
         void showPS(String[] lx);
         void showRQ(String[] yl);
-
+        void visiblePS();
+        void queryUseStatus(String[] items);
 
         void fail(String msg);
 

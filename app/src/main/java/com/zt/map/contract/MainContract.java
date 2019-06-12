@@ -46,7 +46,8 @@ public class MainContract {
         void queryTagger(long projectId,int which);
 
         void queryMarker(long projectId, String text);
-        public void outExcel(Long projectId, final Context mContext);
+         void outExcel(Long projectId, final Context mContext);
+         void outAccess(Long projectId, final Context mContext);
     }
 
     public interface Model {

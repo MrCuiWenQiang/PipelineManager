@@ -4,7 +4,10 @@ import com.zt.map.contract.MarkerContract;
 import com.zt.map.entity.db.PhotoInfo;
 import com.zt.map.entity.db.system.Sys_Appendages;
 import com.zt.map.entity.db.system.Sys_Features;
+import com.zt.map.entity.db.system.Sys_LineType;
+import com.zt.map.entity.db.system.Sys_Manhole;
 import com.zt.map.entity.db.system.Sys_Table;
+import com.zt.map.entity.db.system.Sys_UseStatus;
 import com.zt.map.entity.db.tab.Tab_Line;
 import com.zt.map.entity.db.tab.Tab_Marker;
 import com.zt.map.entity.db.tab.Tab_Project;
@@ -74,6 +77,7 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
             }
         });
     }
+    private String[] lineTypes;
 
     @Override
     public void queryMarker(long id) {
@@ -95,6 +99,88 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
         });
     }
 
+    String[] status;
+    public void queryUseStatus(final long typeId){
+        if (status != null) {
+            getView().queryUseStatus(status);
+            return;
+        }
+
+        queryModel.queryUseStatus(typeId, new BaseMVPModel.CommotListener<List<Sys_UseStatus>>() {
+            @Override
+            public void result(List<Sys_UseStatus> sys_useStatuses) {
+                if (getView() == null) {
+                    return;
+                }
+                if (sys_useStatuses == null || sys_useStatuses.size() <= 0) {
+                    getView().fail("未获取到选择数据");
+                } else {
+                    List<String> datas = new ArrayList<>();
+                    for (Sys_UseStatus item : sys_useStatuses) {
+                        datas.add(item.getName());
+                    }
+                    status = datas.toArray(new String[datas.size()]);
+                    getView().queryUseStatus(status);
+
+                }
+            }
+        });
+    }
+
+    String[] manholes;
+
+    public void querymanhole(final long typeId){
+        if (manholes != null) {
+            getView().querymanhole(manholes);
+            return;
+        }
+        queryModel.queryManhole(String.valueOf(typeId), new BaseMVPModel.CommotListener<List<Sys_Manhole>>() {
+            @Override
+            public void result(List<Sys_Manhole> sys_manholes) {
+                if (getView() == null) {
+                    return;
+                }
+                if (sys_manholes == null || sys_manholes.size() <= 0) {
+                    getView().fail("未获取到选择数据");
+                } else {
+                    List<String> datas = new ArrayList<>();
+                    for (Sys_Manhole item : sys_manholes) {
+                        datas.add(item.getName());
+                    }
+                    manholes = datas.toArray(new String[datas.size()]);
+                    getView().querymanhole(manholes);
+
+                }
+            }
+        });
+    }
+    public void queryType(final long typeid) {
+        if (lineTypes != null) {
+            getView().query_LineType(lineTypes);
+            return;
+        }
+        queryModel.queryLineType(String.valueOf(typeid), new BaseMVPModel.CommotListener<List<Sys_LineType>>() {
+            @Override
+            public void result(List<Sys_LineType> sys_lineTypes) {
+
+                if (getView() == null) {
+                    return;
+                }
+                if (sys_lineTypes == null || sys_lineTypes.size() <= 0) {
+                    getView().fail("未获取到选择数据");
+                } else {
+                    List<String> datas = new ArrayList<>();
+                    for (Sys_LineType item : sys_lineTypes) {
+                        datas.add(item.getName());
+                    }
+                    lineTypes = datas.toArray(new String[datas.size()]);
+                    getView().query_LineType(lineTypes);
+
+                }
+
+            }
+        });
+    }
     @Override
     public void query_tzd(long typeId) {
         if (tzds != null) {

@@ -53,12 +53,9 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     private EditText tvGjdm;
     private EditText tvGxcl;
     private ImageView ivLoadGxcl;
-    private LinearLayout llLx;
     private EditText tvLx;
     private ImageView ivLoadLx;
-    private LinearLayout llQdyj;
     private EditText tvQdyj;
-    private LinearLayout llZdyj;
     private EditText tvZdyj;
     private EditText tvYxzt;
     private ImageView ivLoadYxzt;
@@ -74,8 +71,10 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     private ImageView ivLoadTcfs;
     private EditText tvRemarks;
 
-
-
+    private LinearLayout llLx;
+    private LinearLayout llQdyj;
+    private LinearLayout llZdyj;
+    private LinearLayout llDhgd;
 
 
     private TextView tvSave;
@@ -133,6 +132,7 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         tvGxcl = findViewById(R.id.tv_gxcl);
         ivLoadGxcl = findViewById(R.id.iv_load_gxcl);
         llLx = findViewById(R.id.ll_lx);
+        llDhgd = findViewById(R.id.ll_dhgd);
         tvLx = findViewById(R.id.tv_lx);
         ivLoadLx = findViewById(R.id.iv_load_lx);
         llQdyj = findViewById(R.id.ll_qdyj);
@@ -189,11 +189,13 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     protected void initListener() {
         super.initListener();
         ivLoadMsfs.setOnClickListener(this);
+        ivLoadGxlx.setOnClickListener(this);
 
         ivLoadLx.setOnClickListener(this);
 
         tvSave.setOnClickListener(this);
         tvExit.setOnClickListener(this);
+        ivLoadSyzt.setOnClickListener(this);
     }
 
     @Override
@@ -203,7 +205,10 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.iv_load_gxlx:{
+                mPresenter.queryType(typeId);
+                break;
+            }
 
             case R.id.iv_load_msfs: {
                 mPresenter.queryMsfs(typeId);
@@ -211,6 +216,10 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
             }
             case R.id.iv_load_lx: {
                 selectValue(tvLx, directions);
+                break;
+            }
+       case R.id.iv_load_syzt: {
+           mPresenter.queryUseStatus(typeId);
                 break;
             }
 
@@ -336,7 +345,7 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
 
     @Override
     public void query_LineType(String[] items) {
-//        selectValue(tvGxzl, items);
+        selectValue(tvGxlx, items);
     }
 
     @Override
@@ -400,13 +409,28 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     @Override
     public void showPS(String[] lx) {
         this.directions = lx;
-//            ll_lx.setVisibility(View.VISIBLE);
     }
+
+
+
 
     @Override
     public void showRQ(String[] yl) {
         this.pressures = yl;
 //        ll_yl.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void visiblePS() {
+        llLx.setVisibility(View.VISIBLE);
+        llQdyj.setVisibility(View.VISIBLE);
+        llZdyj.setVisibility(View.VISIBLE);
+        llDhgd.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void queryUseStatus(String[] items) {
+        selectValue(tvSyzt,items);
     }
 
     @Override

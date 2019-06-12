@@ -13,6 +13,9 @@ import com.zt.map.entity.db.system.Sys_Embedding;
 import com.zt.map.entity.db.system.Sys_LineType;
 import com.zt.map.entity.db.system.Sys_Pressure;
 import com.zt.map.entity.db.system.Sys_TGCL;
+import com.zt.map.entity.db.system.Sys_Table;
+import com.zt.map.entity.db.system.Sys_Type_Child;
+import com.zt.map.entity.db.system.Sys_UseStatus;
 import com.zt.map.entity.db.tab.Tab_Line;
 import com.zt.map.entity.db.tab.Tab_Marker;
 import com.zt.map.model.SystemQueryModel;
@@ -236,6 +239,35 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
         });
     }
 
+    String[] status;
+    public void queryUseStatus(final long typeId){
+        if (status != null) {
+            getView().queryUseStatus(status);
+            return;
+        }
+
+        queryModel.queryUseStatus(typeId, new BaseMVPModel.CommotListener<List<Sys_UseStatus>>() {
+            @Override
+            public void result(List<Sys_UseStatus> sys_useStatuses) {
+                if (getView() == null) {
+                    return;
+                }
+                if (sys_useStatuses == null || sys_useStatuses.size() <= 0) {
+                    getView().fail("未获取到选择数据");
+                } else {
+                    List<String> datas = new ArrayList<>();
+                    for (Sys_UseStatus item : sys_useStatuses) {
+                        datas.add(item.getName());
+                    }
+                    status = datas.toArray(new String[datas.size()]);
+                    getView().queryUseStatus(status);
+
+                }
+            }
+        });
+    }
+
+
     @Override
     public void queryStartAndEndMarer(final long projectId, final long typeId, final double start_latitude, final double start_longitude, final double end_latitude, final double end_longitude) {
 
@@ -340,8 +372,25 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
     String[] lx = new String[]{"0","1"};
     String[] yl = new String[]{"高压","次高压","中压","低压"};
     @Override
-    public void queryShowType(long type) {
+    public void queryShowType(final long type) {
         getView().showPS(lx);
+
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Boolean>() {
+            @Override
+            protected Boolean jobContent() throws Exception {
+                Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(type));
+                Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
+
+                return f.getFatherCode().equals("PS");
+            }
+
+            @Override
+            protected void jobEnd(Boolean o) {
+                if (getView()!=null&&o){
+                    getView().visiblePS();
+                }
+            }
+        });
 /*        queryModel.queryFatherType(type, new BaseMVPModel.CommotListener<Map<String, String>>() {
             @Override
             public void result(Map<String, String> stringStringMap) {

@@ -1,7 +1,7 @@
 package com.zt.map.entity.db.system;
 
 import org.litepal.crud.LitePalSupport;
-
+@Deprecated
 public class Sys_Icon  extends LitePalSupport {
     private long id;
     private String name;

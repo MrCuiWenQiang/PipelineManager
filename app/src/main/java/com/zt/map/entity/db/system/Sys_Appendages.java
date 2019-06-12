@@ -7,6 +7,7 @@ public class Sys_Appendages extends LitePalSupport {
     private long id;
     private String fatherCode;//父代号
     private String name;
+    private String icon;
 
     public long getId() {
         return id;
@@ -30,5 +31,13 @@ public class Sys_Appendages extends LitePalSupport {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

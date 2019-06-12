@@ -2,8 +2,14 @@ package com.zt.map.entity.db.tab;
 
 import android.text.TextUtils;
 
+import com.zt.map.entity.db.system.Sys_Appendages;
 import com.zt.map.entity.db.system.Sys_Color;
+import com.zt.map.entity.db.system.Sys_Features;
 import com.zt.map.entity.db.system.Sys_Icon;
+import com.zt.map.entity.db.system.Sys_Table;
+import com.zt.map.entity.db.system.Sys_Type;
+import com.zt.map.entity.db.system.Sys_Type_Child;
+import com.zt.map.util.out.AccessTableName;
 import com.zt.map.util.out.ExcelCount;
 import com.zt.map.util.out.ExcelName;
 
@@ -16,49 +22,50 @@ import cn.faker.repaymodel.util.db.litpal.LitPalUtils;
 /**
  * 管点表
  */
+@AccessTableName(name = "JS_POINT")
 @ExcelName(TabName = "管点表")
 public class Tab_Marker extends LitePalSupport {
     private long id;
     private long projectId;
     private long typeId;//类型id
 
-    @ExcelCount(order = 1,name = "管线类型")
+    @ExcelCount(order = 1, name = "管线类型")
     private String gxlx;//管线类型
-    @ExcelCount(order = 2,name = "管点编号")
+    @ExcelCount(order = 2, name = "管点编号")
     private String wtdh;//管点编号
-    @ExcelCount(order = 3,name = "特征点")
+    @ExcelCount(order = 3, name = "特征点")
     private String tzd;//特征点
-    @ExcelCount(order = 4,name = "附属物")
+    @ExcelCount(order = 4, name = "附属物")
     private String fsw;//附属物
-    @ExcelCount(order = 5,name = "横坐标")
+    @ExcelCount(order = 5, name = "横坐标")
     private double latitude;//x
-    @ExcelCount(order = 6,name = "纵坐标")
+    @ExcelCount(order = 6, name = "纵坐标")
     private double longitude;//y
-    @ExcelCount(order = 7,name = "高程")
+    @ExcelCount(order = 7, name = "高程")
     private String dmgc;//高程
-    @ExcelCount(order = 8,name = "偏心井点号")
+    @ExcelCount(order = 8, name = "偏心井点号")
     private String pxjw;//偏心井点号
-    @ExcelCount(order = 9,name = "井类型")
+    @ExcelCount(order = 9, name = "井类型")
     private String jlx;//井类型
-    @ExcelCount(order = 10,name = "井直径")
+    @ExcelCount(order = 10, name = "井直径")
     private String jzj;//井直径
-    @ExcelCount(order = 11,name = "井脖深")
+    @ExcelCount(order = 11, name = "井脖深")
     private String jbs;//井脖深
-    @ExcelCount(order = 12,name = "井底深")
+    @ExcelCount(order = 12, name = "井底深")
     private String jds;//井底深
-    @ExcelCount(order = 13,name = "井盖类型")
+    @ExcelCount(order = 13, name = "井盖类型")
     private String jglx;//井盖类型
-    @ExcelCount(order = 14,name = "井盖规格")
+    @ExcelCount(order = 14, name = "井盖规格")
     private String jggg;//井盖规格
-    @ExcelCount(order = 15,name = "井盖材质")
+    @ExcelCount(order = 15, name = "井盖材质")
     private String jgcz;//井盖材质
-    @ExcelCount(order = 16,name = "所在位置")
+    @ExcelCount(order = 16, name = "所在位置")
     private String szwz;//所在位置
-    @ExcelCount(order = 17,name = "使用状态")
+    @ExcelCount(order = 17, name = "使用状态")
     private String syzt;//使用状态
-    @ExcelCount(order = 18,name = "探测方式")
+    @ExcelCount(order = 18, name = "探测方式")
     private String tcfs;//探测方式
-    @ExcelCount(order = 19,name = "备注")
+    @ExcelCount(order = 19, name = "备注")
     private String remarks;//备注
 
     private Date updateTime;
@@ -67,33 +74,49 @@ public class Tab_Marker extends LitePalSupport {
     private Sys_Color sys_color;
 
     public Sys_Color getSys_color() {
-            if (sys_color!=null){
-                return sys_color;
-            }
-            sys_color = LitPalUtils.selectsoloWhere(Sys_Color.class,"id = ?",String.valueOf(typeId));
+        if (sys_color != null) {
             return sys_color;
+        }
+        sys_color = LitPalUtils.selectsoloWhere(Sys_Color.class, "id = ?", String.valueOf(typeId));
+        return sys_color;
     }
-
 
 
     public String getIconBase() {
-        if (!TextUtils.isEmpty(iconBase)){
+        if (iconBase != null) {
             return iconBase;
         }
-        if (TextUtils.isEmpty(fsw)){
+        if (TextUtils.isEmpty(tzd) && TextUtils.isEmpty(fsw)) {
+            iconBase = "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMgIyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAJAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDckk0qTQdQv9S1KaLxHFJKOLhlmhmDERpHFnkfdwMEMDk5zWn/AGl4z/6B8f8A3wP8ak1L/kpWn/8AXMfyauzoA//Z";
             return iconBase;
         }
-        Sys_Icon icon = LitPalUtils.selectsoloWhere(Sys_Icon.class, "name = ?", fsw);
-        if (icon != null) {
-            iconBase = icon.getValue();
-            return iconBase;
-        } else {
-            return "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMgIyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAJAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDckk0qTQdQv9S1KaLxHFJKOLhlmhmDERpHFnkfdwMEMDk5zWn/AGl4z/6B8f8A3wP8ak1L/kpWn/8AXMfyauzoA//Z";
+
+        Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(typeId));
+        Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
+        if (!TextUtils.isEmpty(tzd)) {
+            Sys_Features features = LitPalUtils.selectsoloWhere(Sys_Features.class, "name = ? AND fatherCode = ?", tzd, f.getFatherCode());
+            if (features != null) {
+                iconBase = features.getIcon();
+            }
+        } else if (!TextUtils.isEmpty(fsw)) {
+            Sys_Appendages appendages = LitPalUtils.selectsoloWhere(Sys_Appendages.class, "name = ? AND fatherCode = ?", fsw, f.getFatherCode());
+            if (appendages != null) {
+                iconBase = appendages.getIcon();
+            }
         }
+        if (iconBase == null) {
+            iconBase = "/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQDw4ODx4WFxIZJCAmJSMgIyIoLTkwKCo2KyIjMkQyNjs9QEBAJjBGS0U+Sjk/QD3/2wBDAQsLCw8NDx0QEB09KSMpPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT3/wAARCAAJAAkDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDckk0qTQdQv9S1KaLxHFJKOLhlmhmDERpHFnkfdwMEMDk5zWn/AGl4z/6B8f8A3wP8ak1L/kpWn/8AXMfyauzoA//Z";
+        }
+        return iconBase;
     }
 
     public String getGxlx() {
-        return gxlx;
+        Sys_Type type = LitPalUtils.selectsoloWhere(Sys_Type.class, "id=?", String.valueOf(typeId));
+        if (type != null) {
+            return type.getName();
+        } else {
+            return null;
+        }
     }
 
     public void setGxlx(String gxlx) {
@@ -260,7 +283,6 @@ public class Tab_Marker extends LitePalSupport {
     public void setPxjw(String pxjw) {
         this.pxjw = pxjw;
     }
-
 
 
     public String getRemarks() {

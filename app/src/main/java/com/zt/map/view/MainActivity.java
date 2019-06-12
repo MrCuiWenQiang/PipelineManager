@@ -505,7 +505,20 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         }
         return true;
     }
-
+    private boolean permissionFile() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //获取权限（如果没有开启权限，会弹出对话框，询问是否开启权限）
+            int perm = checkCallingOrSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+            boolean permision = (perm == PackageManager.PERMISSION_GRANTED);
+            if (!permision || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                  ) {
+                //请求权限
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 63);
+                return false;
+            }
+        }
+        return true;
+    }
 
     private void selectindex(int index) {
         boolean isSelected = opens[index].isSelected();
@@ -883,9 +896,14 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                         break;
                     }
                     case TAG_SELECT_OUT: {
+                        if (!permissionFile()){
+                            return;
+                        }
                         if (projectId >= 0) {
-                            // TODO: 2019/6/6 daochu
-                            showListDialog(new String[]{"导出为Excel","导出为mdb"}, new DialogInterface.OnClickListener() {
+                            showLoading();
+                            mPresenter.outExcel(projectId,getContext());
+
+                            /*showListDialog(new String[]{"导出为Excel","导出为mdb"}, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -893,10 +911,14 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                                         showLoading();
                                         mPresenter.outExcel(projectId,getContext());
                                         return;
+                                    }else  if (which==1){
+                                        showLoading();
+                                        mPresenter.outAccess(projectId,getContext());
+                                        return;
                                     }
                                     ToastUtility.showToast("功能正在完善");
                                 }
-                            });
+                            });*/
 
                         } else {
                             ToastUtility.showToast("请选择工程");
