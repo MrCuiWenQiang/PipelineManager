@@ -3,7 +3,7 @@
     <dbname value="mapmanager" />
 
     <!--数据库版本号，用于更新数据库-->
-    <version value="8" />
+    <version value="10" />
 
     <list>
         <mapping class="com.zt.map.entity.db.system.Sys_Appendages"/>
@@ -18,13 +18,15 @@
         <mapping class="com.zt.map.entity.db.system.Sys_Color"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Pressure"/>
         <mapping class="com.zt.map.entity.db.system.Sys_TGCL"/>
-        <mapping class="com.zt.map.entity.db.system.Sys_Icon"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Type"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Type_Child"/>
+        <mapping class="com.zt.map.entity.db.system.Sys_Line_Manhole"/>
+
 
         <mapping class="com.zt.map.entity.db.tab.TabUser"/>
 
         <mapping class="com.zt.map.entity.db.tab.Tab_Project"/>
+        <mapping class="com.zt.map.entity.db.tab.Tab_Marker_Count"/>
         <mapping class="com.zt.map.entity.db.tab.Tab_Marker"/>
         <mapping class="com.zt.map.entity.db.tab.Tab_Line"/>
         <mapping class="com.zt.map.entity.db.tab.Tab_marker_photo"/>

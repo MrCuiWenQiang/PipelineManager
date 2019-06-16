@@ -16,7 +16,9 @@
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:orientation="vertical">
-            <LinearLayout style="@style/edit_ll"
+
+            <LinearLayout
+                style="@style/edit_ll"
                 android:visibility="gone">
 
                 <TextView
@@ -99,8 +101,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="35dp"
-                    android:gravity="center_vertical"
-                    android:layout_weight="0.6">
+                    android:layout_weight="0.6"
+                    android:gravity="center_vertical">
 
                     <EditText
                         android:id="@+id/tv_msfs"
@@ -118,6 +120,7 @@
                         android:src="@mipmap/load" />
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout style="@style/edit_ll">
 
                 <TextView
@@ -138,8 +141,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="35dp"
-                    android:gravity="center_vertical"
-                    android:layout_weight="0.6">
+                    android:layout_weight="0.6"
+                    android:gravity="center_vertical">
 
                     <EditText
                         android:id="@+id/tv_gxcl"
@@ -157,61 +160,7 @@
                         android:src="@mipmap/load" />
                 </LinearLayout>
             </LinearLayout>
-            <LinearLayout style="@style/edit_ll" android:id="@+id/ll_lx"
-                android:visibility="gone">
 
-                <TextView
-                    style="@style/edit_title"
-                    android:text="流向" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="35dp"
-                    android:gravity="center_vertical"
-                    android:layout_weight="0.6">
-
-                    <EditText
-                        android:id="@+id/tv_lx"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/edit_style"
-                        android:textSize="18sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_load_lx"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:src="@mipmap/load" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout style="@style/edit_ll"
-                android:visibility="gone"
-                android:id="@+id/ll_qdyj">
-
-                <TextView
-                    style="@style/edit_title"
-                    android:text="起点淤积" />
-
-                <EditText
-                    android:id="@+id/tv_qdyj"
-                    style="@style/edit_view_edit" />
-            </LinearLayout>
-
-            <LinearLayout style="@style/edit_ll"
-                android:visibility="gone"
-                android:id="@+id/ll_zdyj">
-
-                <TextView
-                    style="@style/edit_title"
-                    android:text="终点淤积" />
-
-                <EditText
-                    android:id="@+id/tv_zdyj"
-                    style="@style/edit_view_edit" />
-            </LinearLayout>
 
             <LinearLayout style="@style/edit_ll">
 
@@ -242,37 +191,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout style="@style/edit_ll"
-                android:visibility="gone"
-                android:id="@+id/ll_dhgd">
-
-                <TextView
-                    style="@style/edit_title"
-                    android:text="倒虹管段" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="35dp"
-                    android:layout_weight="0.6"
-                    android:gravity="center_vertical">
-
-                    <EditText
-                        android:id="@+id/tv_dhgd"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@drawable/edit_style"
-                        android:textSize="18sp" />
-
-                    <ImageView
-                        android:id="@+id/iv_load_dhgd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:src="@mipmap/load" />
-                </LinearLayout>
-            </LinearLayout>
-
 
             <LinearLayout style="@style/edit_ll">
 
@@ -292,8 +210,8 @@
                     android:text="权属单位" />
 
                 <EditText
-                android:id="@+id/tv_qsdw"
-                style="@style/edit_view_edit" />
+                    android:id="@+id/tv_qsdw"
+                    style="@style/edit_view_edit" />
             </LinearLayout>
 
             <LinearLayout style="@style/edit_ll">
@@ -334,8 +252,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="35dp"
-                    android:gravity="center_vertical"
-                    android:layout_weight="0.6">
+                    android:layout_weight="0.6"
+                    android:gravity="center_vertical">
 
                     <EditText
                         android:id="@+id/tv_syzt"
@@ -353,7 +271,6 @@
                         android:src="@mipmap/load" />
                 </LinearLayout>
             </LinearLayout>
-
 
 
             <LinearLayout style="@style/edit_ll">
@@ -385,6 +302,29 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <ViewStub
+                android:id="@+id/vs_dx_gd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/vs_dx_gd" />
+
+            <ViewStub
+                android:id="@+id/vs_rq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/vs_rq" />
+
+            <ViewStub
+                android:id="@+id/vs_dy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/vs_child_dy" />
+
+            <ViewStub
+                android:id="@+id/vs_dx_dx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/vs_child_dx" />
 
             <LinearLayout style="@style/edit_ll">
 

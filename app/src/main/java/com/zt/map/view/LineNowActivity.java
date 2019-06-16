@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -53,13 +54,9 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     private EditText tvGjdm;
     private EditText tvGxcl;
     private ImageView ivLoadGxcl;
-    private EditText tvLx;
-    private ImageView ivLoadLx;
-    private EditText tvQdyj;
-    private EditText tvZdyj;
+
     private EditText tvYxzt;
     private ImageView ivLoadYxzt;
-    private EditText tvDhgd;
     private ImageView ivLoadDhgd;
     private EditText tvJsnd;
     private EditText tvQsdw;
@@ -76,6 +73,10 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     private LinearLayout llZdyj;
     private LinearLayout llDhgd;
 
+    private ViewStub vs_dx_dx;
+    private ViewStub vs_dx_ps;
+    private ViewStub vs_rq;
+    private ViewStub vs_dy;
 
     private TextView tvSave;
     private TextView tvExit;
@@ -131,18 +132,8 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         tvGjdm = findViewById(R.id.tv_gjdm);
         tvGxcl = findViewById(R.id.tv_gxcl);
         ivLoadGxcl = findViewById(R.id.iv_load_gxcl);
-        llLx = findViewById(R.id.ll_lx);
-        llDhgd = findViewById(R.id.ll_dhgd);
-        tvLx = findViewById(R.id.tv_lx);
-        ivLoadLx = findViewById(R.id.iv_load_lx);
-        llQdyj = findViewById(R.id.ll_qdyj);
-        tvQdyj = findViewById(R.id.tv_qdyj);
-        llZdyj = findViewById(R.id.ll_zdyj);
-        tvZdyj = findViewById(R.id.tv_zdyj);
         tvYxzt = findViewById(R.id.tv_yxzt);
         ivLoadYxzt = findViewById(R.id.iv_load_yxzt);
-        tvDhgd = findViewById(R.id.tv_dhgd);
-        ivLoadDhgd = findViewById(R.id.iv_load_dhgd);
         tvJsnd = findViewById(R.id.tv_jsnd);
         tvQsdw = findViewById(R.id.tv_qsdw);
         tvSzwz = findViewById(R.id.tv_szwz);
@@ -152,6 +143,10 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         tvTcfs = findViewById(R.id.tv_tcfs);
         ivLoadTcfs = findViewById(R.id.iv_load_tcfs);
         tvRemarks = findViewById(R.id.tv_remarks);
+        vs_dx_dx = findViewById(R.id.vs_dx_dx);
+        vs_dx_ps = findViewById(R.id.vs_dx_gd);
+        vs_rq = findViewById(R.id.vs_rq);
+        vs_dy = findViewById(R.id.vs_dy);
 
 
         tvSave = findViewById(R.id.tv_save);
@@ -160,7 +155,7 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
 
     @Override
     public void initData(Bundle savedInstanceState) {
-        setLeftTitle("绘制管线",R.color.white);
+        setLeftTitle("绘制管线", R.color.white);
         setToolBarBackgroundColor(R.color.blue);
 
         long lineId = getIntent().getLongExtra(KEY_ID, -1);
@@ -181,7 +176,6 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
             mPresenter.queryTopType(projectId, typeId);
             mPresenter.queryStartAndEndMarer(projectId, typeId, start_latitude, start_longitude, end_latitude, end_longitude);
 //            mPresenter.queryUncertainData(typeId);
-            mPresenter.queryShowType(typeId);
         }
     }
 
@@ -191,11 +185,10 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         ivLoadMsfs.setOnClickListener(this);
         ivLoadGxlx.setOnClickListener(this);
 
-        ivLoadLx.setOnClickListener(this);
-
         tvSave.setOnClickListener(this);
         tvExit.setOnClickListener(this);
         ivLoadSyzt.setOnClickListener(this);
+        ivLoadGxcl.setOnClickListener(this);
     }
 
     @Override
@@ -205,8 +198,11 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_load_gxlx:{
+            case R.id.iv_load_gxlx: {
                 mPresenter.queryType(typeId);
+                break;
+            }    case R.id.iv_load_gxcl: {
+                mPresenter.queryCZ(typeId);
                 break;
             }
 
@@ -214,12 +210,8 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
                 mPresenter.queryMsfs(typeId);
                 break;
             }
-            case R.id.iv_load_lx: {
-                selectValue(tvLx, directions);
-                break;
-            }
-       case R.id.iv_load_syzt: {
-           mPresenter.queryUseStatus(typeId);
+            case R.id.iv_load_syzt: {
+                mPresenter.queryUseStatus(typeId);
                 break;
             }
 
@@ -264,7 +256,6 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         tab_line.setQdyj(getValue(tvQdyj));
         tab_line.setZdyj(getValue(tvZdyj));
         tab_line.setYxzt(getValue(tvYxzt));
-        tab_line.setDhgd(getValue(tvDhgd));
         tab_line.setJsnd(getValue(tvJsnd));
         tab_line.setQsdw(getValue(tvQsdw));
         tab_line.setSzwz(getValue(tvSzwz));
@@ -274,6 +265,26 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         tab_line.setRemarks(getValue(tvRemarks));
 
         tab_line.setUpdateTime(new Date());
+
+
+        tab_line.setLx(getValue(tvLx));
+        tab_line.setYl(getValue(tv_yl));
+        tab_line.setDhgd(getValue(tvDhgd));
+        tab_line.setQdyj(getValue(tvQdyj));
+        tab_line.setZdyj(getValue(tvZdyj));
+        tab_line.setYxzt(getValue(tvYxzt));
+        tab_line.setSsyxzt(getValue(ntv_yxzt));
+        tab_line.setGxzl(getValue(tv_gxzl));
+        tab_line.setGddj(getValue(tv_gddj));
+        tab_line.setYhqk(getValue(tv_yhqk));
+
+        tab_line.setZks(getValue(tv_zks));
+        tab_line.setYyks(getValue(tv_yyks));
+        tab_line.setTs(getValue(tv_ts));
+
+        tab_line.setYl(getValue(tv_yl));
+        tab_line.setDy(getValue(tv_dy));
+
 
         showLoading();
         mPresenter.save(tab_line);
@@ -315,12 +326,9 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         tvMsfs.setText(tabLine.getMsfs());
         tvGjdm.setText(tabLine.getGjdm());
         tvGxcl.setText(tabLine.getGxcl());
-        tvLx.setText(tabLine.getLx());
 
-        tvQdyj.setText(tabLine.getQdyj());
-        tvZdyj.setText(tabLine.getZdyj());
         tvYxzt.setText(tabLine.getYxzt());
-        tvDhgd.setText(tabLine.getDhgd());
+
         tvJsnd.setText(tabLine.getJsnd());
         tvQsdw.setText(tabLine.getQsdw());
         tvSzwz.setText(tabLine.getSzwz());
@@ -353,57 +361,45 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         selectValue(tvMsfs, items);
     }
 
+
+    private Tab_Line topLine;
     @Override
     public void queryTopType(Tab_Line tabLine) {
         dimiss();
-        if (tabLine == null) return;
+        mPresenter.queryShowType(typeId);
 
-        tvQdms.setText(tabLine.getQdms());
-        tvZzms.setText(tabLine.getZzms());
+        topLine = tabLine;
+
+        if (tabLine == null) return;
+        //上一条线的终点埋深默认为下一条线的起点埋深
+        tvQdms.setText(tabLine.getZzms());
+//        tvZzms.setText(tabLine.getZzms());
         tvMsfs.setText(tabLine.getMsfs());
         tvGjdm.setText(tabLine.getGjdm());
         tvGxcl.setText(tabLine.getGxcl());
-        tvLx.setText(tabLine.getLx());
 
-        tvQdyj.setText(tabLine.getQdyj());
-        tvZdyj.setText(tabLine.getZdyj());
         tvYxzt.setText(tabLine.getYxzt());
-        tvDhgd.setText(tabLine.getDhgd());
         tvJsnd.setText(tabLine.getJsnd());
         tvQsdw.setText(tabLine.getQsdw());
         tvSzwz.setText(tabLine.getSzwz());
         tvSyzt.setText(tabLine.getSyzt());
         tvTcfs.setText(tabLine.getTcfs());
+
+
     }
 
     @Override
     public void queryUncertainData(String[] tgcls, String[] pressures, String[] directions) {
-//        this.tgcls = tgcls;
-//        this.pressures = pressures;
-//        this.directions = directions;
-//        if (directions != null && directions.length > 0) {
-//            ll_lx.setVisibility(View.VISIBLE);
-//        }
-//        if (tgcls != null && tgcls.length > 0) {
-//            ll_tgcl.setVisibility(View.VISIBLE);
-//        }
-//        if (pressures != null && pressures.length > 0) {
-//            ll_yl.setVisibility(View.VISIBLE);
-//        }
     }
 
     @Override
     public void showDX() {
-//        ll_zks.setVisibility(View.VISIBLE);
-//        ll_yyks.setVisibility(View.VISIBLE);
-//        ll_dlts.setVisibility(View.VISIBLE);
-//        ll_tgcc.setVisibility(View.VISIBLE);
+
     }
 
     @Override
     public void showDL(String[] dy) {
         this.dy = dy;
-//        ll_sy.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -412,25 +408,163 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     }
 
 
-
-
     @Override
     public void showRQ(String[] yl) {
         this.pressures = yl;
-//        ll_yl.setVisibility(View.VISIBLE);
     }
+    private EditText tvLx;
+    private ImageView ivLoadLx;
+    private EditText tvQdyj;
+    private EditText tvZdyj;
+    private EditText tv_yhqk;
+    private EditText tvDhgd;
+
+    private EditText ntv_yxzt;
+    private ImageView niv_load_yxzt;
+    private EditText tv_gxzl;
+    private ImageView iv_load_gxzl;
+    private EditText tv_gddj;
+    private ImageView iv_load_gddj;
 
     @Override
-    public void visiblePS() {
-        llLx.setVisibility(View.VISIBLE);
-        llQdyj.setVisibility(View.VISIBLE);
-        llZdyj.setVisibility(View.VISIBLE);
-        llDhgd.setVisibility(View.VISIBLE);
+    public void visiblePS(final String[] lx, final String[] dhgd) {
+        vs_dx_ps.inflate();
+
+        llLx = findViewById(R.id.ll_lx);
+        llDhgd = findViewById(R.id.ll_dhgd);
+        tvLx = findViewById(R.id.tv_lx);
+        ivLoadLx = findViewById(R.id.iv_load_lx);
+        ivLoadDhgd = findViewById(R.id.iv_load_dhgd);
+        llQdyj = findViewById(R.id.ll_qdyj);
+        tvQdyj = findViewById(R.id.tv_qdyj);
+        llZdyj = findViewById(R.id.ll_zdyj);
+        tvZdyj = findViewById(R.id.tv_zdyj);
+        tvDhgd = findViewById(R.id.tv_dhgd);
+        tv_yhqk = findViewById(R.id.tv_yhqk);
+        ntv_yxzt = findViewById(R.id.ntv_yxzt);
+        tv_gxzl = findViewById(R.id.tv_gxzl);
+        tv_gddj = findViewById(R.id.tv_gddj);
+        niv_load_yxzt = findViewById(R.id.niv_load_yxzt);
+        iv_load_gxzl = findViewById(R.id.iv_load_gxzl);
+        iv_load_gddj = findViewById(R.id.iv_load_gddj);
+
+        ivLoadLx.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectValue(tvLx, lx);
+            }
+        });
+        ivLoadDhgd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectValue(tvDhgd, dhgd);
+            }
+        });
+        niv_load_yxzt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectValue(ntv_yxzt, new String[]{"流水情况","溢井","淹管","见顶","1/2管","1/3管","少量","无水"});
+            }
+        });
+        iv_load_gxzl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectValue(tv_gxzl, new String[]{"良","一般","差"});
+            }
+        });
+        iv_load_gddj.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectValue(tv_gddj, new String[]{"主干管","干管","支管","庭院管"});
+            }
+        });
+        Tab_Line data = topLine==null? tab_line:topLine;
+        if (data!=null){
+            tvLx.setText(data.getLx());
+            tvDhgd.setText(data.getDhgd());
+            tvQdyj.setText(data.getQdyj());
+            tvZdyj.setText(data.getZdyj());
+            ntv_yxzt .setText(data.getYxzt());
+            tv_gxzl.setText(data.getGxzl());
+            tv_gddj.setText(data.getGddj());
+            tv_yhqk.setText(data.getYhqk());
+        }
+    }
+
+    private EditText tv_zks;
+    private EditText tv_yyks;
+    private EditText tv_ts;
+
+    @Override
+    public void visibleDX() {
+        vs_dx_dx.inflate();
+
+        tv_zks = findViewById(R.id.tv_zks);
+        tv_yyks = findViewById(R.id.tv_yyks);
+        tv_ts = findViewById(R.id.tv_ts);
+
+
+        Tab_Line data = topLine==null? tab_line:topLine;
+        if (data!=null){
+            tv_zks.setText(data.getZks());
+            tv_yyks.setText(data.getYyks());
+            tv_ts.setText(data.getTs());
+        }
+    }
+
+    private EditText tv_yl;
+    private ImageView iv_load_yl;
+    @Override
+    public void visibleRQ(final String[] yl) {
+        vs_rq.inflate();
+        tv_yl = findViewById(R.id.tv_yl);
+        iv_load_yl = findViewById(R.id.iv_load_yl);
+        iv_load_yl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectValue(tv_yl,yl);
+            }
+        });
+        Tab_Line data = topLine==null? tab_line:topLine;
+        if (data!=null){
+            tv_yl.setText(data.getYl());
+        }
+    }
+
+    private EditText tv_dy;
+
+    private ImageView iv_load_dy;
+    @Override
+    public void visiblegd(final String[] dy) {
+        vs_dy.inflate();
+        tv_zks = findViewById(R.id.tv_zks);
+        tv_yyks = findViewById(R.id.tv_yyks);
+        tv_ts = findViewById(R.id.tv_ts);
+        tv_dy = findViewById(R.id.tv_dy);
+        iv_load_dy = findViewById(R.id.iv_load_dy);
+        iv_load_dy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectValue(tv_dy,dy);
+            }
+        });
+        Tab_Line data = topLine==null? tab_line:topLine;
+        if (data!=null){
+            tv_dy.setText(data.getDy());
+            tv_zks.setText(data.getZks());
+            tv_yyks.setText(data.getYyks());
+            tv_ts.setText(data.getTs());
+        }
     }
 
     @Override
     public void queryUseStatus(String[] items) {
-        selectValue(tvSyzt,items);
+        selectValue(tvSyzt, items);
+    }
+
+    @Override
+    public void queryCZ(String[] items) {
+        selectValue(tvGxcl, items);
     }
 
     @Override
@@ -460,7 +594,7 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
 
 
     private void selectValue(final TextView tv, final String[] items) {
-        if (items==null||items.length<=0){
+        if (items == null || items.length <= 0) {
             ToastUtility.showToast("暂无分类");
             return;
         }

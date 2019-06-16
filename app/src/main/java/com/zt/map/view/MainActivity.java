@@ -814,7 +814,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         Bundle opbundle = new Bundle();
         opbundle.putLong(KEY_LINE_ID, lineId);
         OverlayOptions mOverlayOptions = new PolylineOptions()
-                .width(10)
+                .width(5)
                 .color(color)
                 .points(points).extraInfo(opbundle);
         baiduMap.addOverlay(mOverlayOptions);

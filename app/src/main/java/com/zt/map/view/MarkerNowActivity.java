@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -100,6 +101,8 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     private ImageView ivLoadJgcz;
     private EditText tvSzwz;
     private ImageView ivLoadSzwz;
+    private EditText tv_jgzt;
+    private ImageView ivLoadjgzt;
     private EditText tvSyzt;
     private ImageView ivLoadSyzt;
     private EditText tvTcfs;
@@ -117,6 +120,8 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     private Tab_Marker tab;
 
     private List<PhotoInfo> photos = new ArrayList<>();
+
+    private ViewStub vs_ps;
 
     @Override
     protected int getLayoutContentId() {
@@ -143,10 +148,13 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tvJbs = findViewById(R.id.tv_jbs);
         tvJds = findViewById(R.id.tv_jds);
         tvJglx = findViewById(R.id.tv_jglx);
+        vs_ps = findViewById(R.id.vs_ps);
         ivLoadJglx = findViewById(R.id.iv_load_jglx);
         tvJggg = findViewById(R.id.tv_jggg);
         tvJgcz = findViewById(R.id.tv_jgcz);
         ivLoadJgcz = findViewById(R.id.iv_load_jgcz);
+        tv_jgzt = findViewById(R.id.tv_jgzt);
+        ivLoadjgzt = findViewById(R.id.iv_load_jgzt);
         tvSzwz = findViewById(R.id.tv_szwz);
         ivLoadSzwz = findViewById(R.id.iv_load_szwz);
         tvSyzt = findViewById(R.id.tv_syzt);
@@ -186,6 +194,8 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     protected void initListener() {
         super.initListener();
         tvSave.setOnClickListener(this);
+        ivLoadjgzt.setOnClickListener(this);
+        ivLoadJglx.setOnClickListener(this);
         tvExit.setOnClickListener(this);
         ivLoadTzd.setOnClickListener(this);
         ivLoadFsw.setOnClickListener(this);
@@ -203,6 +213,14 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
 
         tab.setProjectId(projectId);
         tab.setTypeId(typeId);
+
+
+
+        tab.setSzhd(getValue(tv_szhd));
+        tab.setPshmc(getValue(tv_pshmc));
+        tab.setWjbh(getValue(tv_wjbh));
+        tab.setQksm(getValue(tv_yhqksm));
+        tab.setJgzt(getValue(tv_jgzt));
 
         tab.setGxlx(getValue(tvGxlx));
         tab.setWtdh(getValue(tvWtdh));
@@ -247,6 +265,9 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
             case R.id.iv_load_gxlx: {
                 mPresenter.queryType(typeId);
                 break;
+            }  case R.id.iv_load_jgzt: {
+               selectValue(tv_jgzt,new String[]{"完好","破损","丢失"});
+                break;
             }
             case R.id.iv_load_tzd: {
                 mPresenter.query_tzd(typeId);
@@ -258,6 +279,10 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
             }
             case R.id.iv_load_jgcz: {
                 mPresenter.querymanhole(typeId);
+                break;
+            }
+            case R.id.iv_load_jglx: {
+               selectValue(tvJglx,new String[]{"方形","圆形","其它"});
                 break;
             }
             case R.id.iv_load_syzt: {
@@ -313,10 +338,12 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
 
     @Override
     public void queryMarker_success(Tab_Marker marker) {
-        tab = marker;
+        vMarker = tab = marker;
+
         projectId = marker.getProjectId();
         typeId = marker.getTypeId();
         tvGxlx.setText(marker.getGxlx());
+        tv_jgzt.setText(marker.getJgzt());
         tvWtdh.setText(marker.getWtdh());
         tvTz.setText(marker.getTzd());
         tvFsw.setText(marker.getFsw());
@@ -339,6 +366,8 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
 
         tvRemarks.setText(marker.getRemarks());
         mPresenter.queryIsPhoto(projectId);
+
+        mPresenter.queryVisible(typeId);
         dimiss();
     }
 
@@ -357,9 +386,11 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     @Override
     public void queryTopType(Tab_Marker marker) {
         dimiss();
-
+        vMarker = marker;
+        mPresenter.queryVisible(typeId);
         if (marker == null) return;
         tvTz.setText(marker.getTzd());
+        tv_jgzt.setText(marker.getJgzt());
         tvFsw.setText(marker.getFsw());
         tvDmgc.setText(marker.getDmgc());
         tvPxjw.setText(marker.getPxjw());
@@ -446,6 +477,28 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     @Override
     public void queryUseStatus(String[] items) {
         selectValue(tvSyzt, items);
+    }
+
+    private EditText tv_szhd;
+    private EditText tv_pshmc;
+    private EditText tv_wjbh;
+    private EditText tv_yhqksm;
+
+    private Tab_Marker vMarker;
+    @Override
+    public void visiblePS() {
+
+        vs_ps.inflate();
+        tv_szhd= findViewById(R.id.tv_szhd);
+        tv_pshmc= findViewById(R.id.tv_gshmc);
+        tv_wjbh= findViewById(R.id.tv_wjbh);
+        tv_yhqksm= findViewById(R.id.tv_yhqksm);
+        if (vMarker!=null){
+            tv_szhd.setText(vMarker.getSzhd());
+            tv_pshmc.setText(vMarker.getPshmc());
+            tv_wjbh.setText(vMarker.getWjbh());
+            tv_yhqksm.setText(vMarker.getQksm());
+        }
     }
 
     private void selectValue(final TextView tv, final String[] items) {

@@ -1,19 +1,10 @@
 package com.zt.map.entity.db.system;
 
 import org.litepal.crud.LitePalSupport;
-@Deprecated
-public class Sys_Icon  extends LitePalSupport {
-    private long id;
-    private String name;
+
+public class Sys_Line_Manhole extends LitePalSupport {
+    private String name;//类别名（大类）
     private String value;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

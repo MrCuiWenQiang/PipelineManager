@@ -135,6 +135,7 @@ public abstract class BaseActivity extends BaseManagerActivity implements BasicA
     }
 
     protected String getValue(EditText text) {
+        if (text==null) return  null;
         if (TextUtils.isEmpty(text.getText())) {
             return null;
         } else {

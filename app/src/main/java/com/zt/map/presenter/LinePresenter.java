@@ -11,6 +11,7 @@ import com.zt.map.contract.LineContract;
 import com.zt.map.entity.db.system.Sys_Direction;
 import com.zt.map.entity.db.system.Sys_Embedding;
 import com.zt.map.entity.db.system.Sys_LineType;
+import com.zt.map.entity.db.system.Sys_Line_Manhole;
 import com.zt.map.entity.db.system.Sys_Pressure;
 import com.zt.map.entity.db.system.Sys_TGCL;
 import com.zt.map.entity.db.system.Sys_Table;
@@ -102,6 +103,33 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
                     getView().queryLine_Success(tabLine);
                 } else {
                     getView().saveFail("未查询到该管线信息");
+                }
+            }
+        });
+    }
+    private String[] czs;
+
+    public void queryCZ(final long typeid){
+        if (czs != null) {
+            getView().queryCZ(czs);
+            return;
+        }
+        queryModel.queryCZ(String.valueOf(typeid), new BaseMVPModel.CommotListener<List<Sys_Line_Manhole>>() {
+            @Override
+            public void result(List<Sys_Line_Manhole> sys_line_manholes) {
+                if (getView() == null) {
+                    return;
+                }
+                if (sys_line_manholes == null || sys_line_manholes.size() <= 0) {
+                    getView().fail("未获取到选择数据");
+                } else {
+                    List<String> datas = new ArrayList<>();
+                    for (Sys_Line_Manhole item : sys_line_manholes) {
+                        datas.add(item.getValue());
+                    }
+                    czs = datas.toArray(new String[datas.size()]);
+                    getView().queryCZ(czs);
+
                 }
             }
         });
@@ -371,54 +399,43 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
     String[] dy = new String[]{"0.22kV","0.38kV","10kV","35kV","110kV","220kV","500kV"};
     String[] lx = new String[]{"0","1"};
     String[] yl = new String[]{"高压","次高压","中压","低压"};
+    String[] dh = new String[]{"是","否"};
     @Override
     public void queryShowType(final long type) {
-        getView().showPS(lx);
+//        getView().showPS(lx);
 
-        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Boolean>() {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Map<String,String>>() {
             @Override
-            protected Boolean jobContent() throws Exception {
+            protected Map<String,String> jobContent() throws Exception {
                 Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(type));
                 Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
-
-                return f.getFatherCode().equals("PS");
+                Map<String,String> params = new HashMap<>();
+                params.put("c",tables.getCode());
+                params.put("f",f.getFatherCode());
+                return params;
             }
 
             @Override
-            protected void jobEnd(Boolean o) {
-                if (getView()!=null&&o){
-                    getView().visiblePS();
+            protected void jobEnd(Map<String,String> code) {
+                String c = code.get("c");
+                String f = code.get("f");
+                if (getView()!=null){
+                    if (f.equals("PS")){
+                        getView().visiblePS(lx,dh);
+                    }else if (f.equals("DX")){
+                        getView().visibleDX();
+                    }else if (f.equals("RQ")){
+                        getView().visibleRQ(yl);
+                    }else if (f.equals("BM")){
+//                        getView().visibleBM();
+                    }
+
+                    if (c.equals("GD")){
+                        getView().visiblegd(dy);
+                    }
                 }
             }
         });
-/*        queryModel.queryFatherType(type, new BaseMVPModel.CommotListener<Map<String, String>>() {
-            @Override
-            public void result(Map<String, String> stringStringMap) {
-                if (getView()==null){
-                    return;
-                }
-
-                String s = stringStringMap.get("child");
-                String f = stringStringMap.get("father");
-                if (!TextUtils.isEmpty(s)){
-                    if (s.equals("LD")||s.equals("GD")||s.equals("XH")){
-                        getView().showDL(dy);
-                    }else if (s.equals("TX")||s.equals("JK")){
-                        //总孔数 已用孔数 电缆条数 套管尺寸
-                        getView().showDX();
-                    }else if (s.equals("YS")||s.equals("WS")){
-                        //流向
-                        getView().showPS(lx);
-                    }
-                }
-                if (!TextUtils.isEmpty(f)){
-                     if (f.equals(TypeConstant.RQ)){
-                        //压力
-                         getView().showRQ(yl);
-                    }
-                }
-            }
-        });*/
     }
 
     public static Map<Long, Double> sortMapByValue(Map<Long, Double> oriMap) {

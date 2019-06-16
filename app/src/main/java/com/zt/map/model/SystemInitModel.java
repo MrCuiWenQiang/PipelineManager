@@ -7,8 +7,8 @@ import com.zt.map.entity.db.system.Sys_Color;
 import com.zt.map.entity.db.system.Sys_Direction;
 import com.zt.map.entity.db.system.Sys_Embedding;
 import com.zt.map.entity.db.system.Sys_Features;
-import com.zt.map.entity.db.system.Sys_Icon;
 import com.zt.map.entity.db.system.Sys_LineType;
+import com.zt.map.entity.db.system.Sys_Line_Manhole;
 import com.zt.map.entity.db.system.Sys_Manhole;
 import com.zt.map.entity.db.system.Sys_Material;
 import com.zt.map.entity.db.system.Sys_Pressure;
@@ -69,17 +69,7 @@ public class SystemInitModel extends BaseMVPModel {
                             LitPalUtils.saveAll(materials);
 
                         } else if (name.equals(vs_name[1])) {
-
-                       /*     List<Sys_Appendages> appendages = new ArrayList<>();
-                            for (Table t : vtab) {
-                                Sys_Appendages material = new Sys_Appendages();
-                                material.setFatherCode(tab.getCode());
-                                material.setName(t.getName());
-                                appendages.add(material);
-                            }
-                            tab.setAppendages(appendages);
-                            LitPalUtils.saveAll(appendages);*/
-
+                            continue;
                         } else if (name.equals(vs_name[2])) {
 
                             List<Sys_LineType> lineTypes = new ArrayList<>();
@@ -140,16 +130,7 @@ public class SystemInitModel extends BaseMVPModel {
                             tab.setDirection(directions);
                             LitPalUtils.saveAll(directions);
                         } else if (name.equals(vs_name[7])) {
-
-                         /*   List<Sys_Features> features = new ArrayList<>();
-                            for (Table t : vtab) {
-                                Sys_Features material = new Sys_Features();
-                                material.setFatherCode(tab.getCode());
-                                material.setName(t.getName());
-                                features.add(material);
-                            }
-                            tab.setFeatures(features);
-                            LitPalUtils.saveAll(features);*/
+                            continue;
                         } else if (name.equals(vs_name[8])) {
                             List<Sys_Color> colors = new ArrayList<>();
                             for (Table t : vtab) {
@@ -194,26 +175,14 @@ public class SystemInitModel extends BaseMVPModel {
                     }
                 }
                 LitPalUtils.saveAll(tabs);
-  /*              //保存图片
-                InputStream iconinputStream = MyApplication.getContext().getResources().openRawResource(R.raw.icon);
-                Map<String, String> maps = FileReadOpen.readIcon(iconinputStream);
-                List<Sys_Icon> icons = new ArrayList<>();
-                if (maps != null) {
-                    for (String key : maps.keySet()) {
-                        Sys_Icon sys_icon = new Sys_Icon();
-                        sys_icon.setName(key);
-                        sys_icon.setValue(maps.get(key));
-                        icons.add(sys_icon);
-                    }
-                }
-                LitPalUtils.saveAll(icons);*/
 
+                //附属物
                 InputStream fsputStream = MyApplication.getContext().getResources().openRawResource(R.raw.fushuwu);
                 Map<String, Map<String, String>> fsmaps = FileReadOpen.readTZORFSW(fsputStream);
                 List<Sys_Appendages> aps = new ArrayList<>();
                 for (String father : fsmaps.keySet()) {
-                   Map<String,String> child = fsmaps.get(father);
-                    for (String key: child.keySet()) {
+                    Map<String, String> child = fsmaps.get(father);
+                    for (String key : child.keySet()) {
                         Sys_Appendages sys_appendages = new Sys_Appendages();
                         sys_appendages.setName(key);
                         sys_appendages.setFatherCode(father);
@@ -222,13 +191,15 @@ public class SystemInitModel extends BaseMVPModel {
                     }
                 }
                 LitPalUtils.saveAll(aps);
+
+                //特征
                 InputStream tzputStream = MyApplication.getContext().getResources().openRawResource(R.raw.tezhen);
                 Map<String, Map<String, String>> tzmaps = FileReadOpen.readTZORFSW(tzputStream);
 
                 List<Sys_Features> fs = new ArrayList<>();
                 for (String father : tzmaps.keySet()) {
-                    Map<String,String> child = tzmaps.get(father);
-                    for (String key: child.keySet()) {
+                    Map<String, String> child = tzmaps.get(father);
+                    for (String key : child.keySet()) {
                         Sys_Features sys_appendages = new Sys_Features();
                         sys_appendages.setName(key);
                         sys_appendages.setFatherCode(father);
@@ -238,6 +209,25 @@ public class SystemInitModel extends BaseMVPModel {
                 }
                 LitPalUtils.saveAll(fs);
 
+                //线材质
+                InputStream inec = MyApplication.getContext().getResources().openRawResource(R.raw.caizi);
+                Map<String, List<String>> lparams = FileReadOpen.readCaiZi(inec);
+
+               List<Sys_Line_Manhole> mans = new ArrayList<>();
+                for (String key : lparams.keySet()) {
+                    List<String> ls = lparams.get(key);
+                    if (ls == null) {
+                        continue;
+                    }
+                    for (String v:ls){
+                        Sys_Line_Manhole item = new Sys_Line_Manhole();
+                        item.setName(key);
+                        item.setValue(v);
+                        mans.add(item);
+                    }
+                }
+                LitPalUtils.saveAll(mans);
+                //管类层级
                 InputStream typeStream = MyApplication.getContext().getResources().openRawResource(R.raw.type);
                 Map<String, Map<String, String>> params = FileReadOpen.readType(typeStream);
                 List<Sys_Type> types = new ArrayList<>();

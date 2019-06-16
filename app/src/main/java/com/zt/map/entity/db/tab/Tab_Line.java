@@ -77,8 +77,29 @@ public class Tab_Line extends LitePalSupport {
     private String Syzt;//使用状态
     @ExcelCount(order = 18,name = "探测方式")
     private String tcfs;//探测方式
-    @ExcelCount(order = 19,name = "备注")
+    @ExcelCount(order = 100,name = "备注")
     private String Remarks;
+
+    @ExcelCount(order = 19,name = "总孔数")
+    private String Zks;
+    @ExcelCount(order = 20,name = "已用孔数")
+    private String Yyks;
+    @ExcelCount(order = 21,name = "条数")
+    private String Ts;
+
+    @ExcelCount(order = 22,name = "设施运行状态")
+    private String ssyxzt;
+    @ExcelCount(order = 23,name = "管线质量")
+    private String gxzl;
+    @ExcelCount(order = 24,name = "管道等级")
+    private String gddj;
+    @ExcelCount(order = 25,name = "隐患情况说明")
+    private String yhqk;
+
+    @ExcelCount(order = 26,name = "压力")
+    private String yl;
+    @ExcelCount(order = 27,name = "电压")
+    private String dy;
 
     private Date updateTime;
     private Date createTime;
@@ -93,6 +114,87 @@ public class Tab_Line extends LitePalSupport {
             Qswh = marker.getWtdh();
             return Qswh;
         }
+    }
+
+    public void setQswh(String qswh) {
+        Qswh = qswh;
+    }
+
+    public void setZzwh(String zzwh) {
+        Zzwh = zzwh;
+    }
+
+    public String getZks() {
+        return Zks;
+    }
+
+    public void setZks(String zks) {
+        Zks = zks;
+    }
+
+    public String getYyks() {
+        return Yyks;
+    }
+
+    public void setYyks(String yyks) {
+        Yyks = yyks;
+    }
+
+    public String getTs() {
+        return Ts;
+    }
+
+    public void setTs(String ts) {
+        Ts = ts;
+    }
+
+
+    public String getSsyxzt() {
+        return ssyxzt;
+    }
+
+    public void setSsyxzt(String ssyxzt) {
+        this.ssyxzt = ssyxzt;
+    }
+
+    public String getGxzl() {
+        return gxzl;
+    }
+
+    public void setGxzl(String gxzl) {
+        this.gxzl = gxzl;
+    }
+
+    public String getGddj() {
+        return gddj;
+    }
+
+    public void setGddj(String gddj) {
+        this.gddj = gddj;
+    }
+
+    public String getYhqk() {
+        return yhqk;
+    }
+
+    public void setYhqk(String yhqk) {
+        this.yhqk = yhqk;
+    }
+
+    public String getYl() {
+        return yl;
+    }
+
+    public void setYl(String yl) {
+        this.yl = yl;
+    }
+
+    public String getDy() {
+        return dy;
+    }
+
+    public void setDy(String dy) {
+        this.dy = dy;
     }
 
     public String getZzwh() {

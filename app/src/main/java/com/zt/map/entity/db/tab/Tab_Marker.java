@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import com.zt.map.entity.db.system.Sys_Appendages;
 import com.zt.map.entity.db.system.Sys_Color;
 import com.zt.map.entity.db.system.Sys_Features;
-import com.zt.map.entity.db.system.Sys_Icon;
 import com.zt.map.entity.db.system.Sys_Table;
 import com.zt.map.entity.db.system.Sys_Type;
 import com.zt.map.entity.db.system.Sys_Type_Child;
@@ -59,14 +58,34 @@ public class Tab_Marker extends LitePalSupport {
     private String jggg;//井盖规格
     @ExcelCount(order = 15, name = "井盖材质")
     private String jgcz;//井盖材质
-    @ExcelCount(order = 16, name = "所在位置")
+    @ExcelCount(order = 16, name = "井盖状态")
+    private String jgzt;
+    @ExcelCount(order = 17, name = "所在位置")
     private String szwz;//所在位置
-    @ExcelCount(order = 17, name = "使用状态")
+    @ExcelCount(order = 18, name = "使用状态")
     private String syzt;//使用状态
-    @ExcelCount(order = 18, name = "探测方式")
+    @ExcelCount(order = 19, name = "探测方式")
     private String tcfs;//探测方式
-    @ExcelCount(order = 19, name = "备注")
+
+    @ExcelCount(order = 20, name = "所在河道")
+    private String szhd;
+    @ExcelCount(order = 21, name = "排水户名称")
+    private String pshmc;
+    @ExcelCount(order = 22, name = "影像资料文件编号")
+    private String wjbh;
+    @ExcelCount(order = 23, name = "隐患情况说明")
+    private String qksm;
+
+    @ExcelCount(order = 30, name = "备注")
     private String remarks;//备注
+
+    public String getJgzt() {
+        return jgzt;
+    }
+
+    public void setJgzt(String jgzt) {
+        this.jgzt = jgzt;
+    }
 
     private Date updateTime;
     private Date createTime;
@@ -119,6 +138,37 @@ public class Tab_Marker extends LitePalSupport {
         }
     }
 
+    public String getSzhd() {
+        return szhd;
+    }
+
+    public void setSzhd(String szhd) {
+        this.szhd = szhd;
+    }
+
+    public String getPshmc() {
+        return pshmc;
+    }
+
+    public void setPshmc(String pshmc) {
+        this.pshmc = pshmc;
+    }
+
+    public String getWjbh() {
+        return wjbh;
+    }
+
+    public void setWjbh(String wjbh) {
+        this.wjbh = wjbh;
+    }
+
+    public String getQksm() {
+        return qksm;
+    }
+
+    public void setQksm(String qksm) {
+        this.qksm = qksm;
+    }
     public void setGxlx(String gxlx) {
         this.gxlx = gxlx;
     }

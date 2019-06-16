@@ -7,9 +7,11 @@ import com.zt.map.entity.db.system.Sys_Features;
 import com.zt.map.entity.db.system.Sys_LineType;
 import com.zt.map.entity.db.system.Sys_Manhole;
 import com.zt.map.entity.db.system.Sys_Table;
+import com.zt.map.entity.db.system.Sys_Type_Child;
 import com.zt.map.entity.db.system.Sys_UseStatus;
 import com.zt.map.entity.db.tab.Tab_Line;
 import com.zt.map.entity.db.tab.Tab_Marker;
+import com.zt.map.entity.db.tab.Tab_Marker_Count;
 import com.zt.map.entity.db.tab.Tab_Project;
 import com.zt.map.entity.db.tab.Tab_marker_photo;
 import com.zt.map.model.MarkerModel;
@@ -17,7 +19,9 @@ import com.zt.map.model.SystemQueryModel;
 import com.zt.map.util.out.ExcelUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.faker.repaymodel.mvp.BaseMVPModel;
 import cn.faker.repaymodel.mvp.BaseMVPPresenter;
@@ -40,6 +44,19 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
 
             @Override
             protected Boolean jobContent() throws Exception {
+                if (tab.getId()<=0){
+                    // TODO: 2019/6/14 需测试 
+                    Tab_Marker_Count count =LitPalUtils.selectsoloWhere(Tab_Marker_Count.class,"projectId = ? AND typeId=?",
+                            String.valueOf(tab.getProjectId()), String.valueOf(tab.getTypeId()));
+                    if (count==null){
+                        count = new Tab_Marker_Count();
+                    }
+                    count.setCount(count.getCount()+1);
+                    count.setProjectId(tab.getProjectId());
+                    count.setTypeId(tab.getTypeId());
+                    count.save();
+                }
+
                 boolean status = tab.save();
                 long makerId = tab.getId();
                 long projectId = tab.getProjectId();
@@ -269,10 +286,14 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
                 Sys_Table table = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(typeId));
                 StringBuilder name = new StringBuilder();
                 name.append(table.getCode());
-                int count = LitPalUtils.selectCount(Tab_Marker.class, "projectId=? AND typeId=?"
-                        , String.valueOf(project), String.valueOf(typeId));
-                if (count > 0) {
-                    name.append(count + 1);
+           /*     int count = LitPalUtils.selectCount(Tab_Marker.class, "projectId=? AND typeId=?"
+                        , String.valueOf(project), String.valueOf(typeId));*/
+
+
+                Tab_Marker_Count count = LitPalUtils.selectsoloWhere(Tab_Marker_Count.class,"projectId = ? AND typeId=?", String.valueOf(project), String.valueOf(typeId));
+
+                if (count !=null) {
+                    name.append(count.getCount() + 1);
                 } else {
                     name.append(1);
                 }
@@ -353,6 +374,42 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
             protected void jobEnd(Boolean aBoolean) {
                 if (getView() != null && aBoolean) {
                     getView().createPhoto();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void queryVisible(final long typeId) {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Map<String,String>>() {
+            @Override
+            protected Map<String,String> jobContent() throws Exception {
+                Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(typeId));
+                Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
+                Map<String,String> params = new HashMap<>();
+                params.put("c",tables.getCode());
+                params.put("f",f.getFatherCode());
+                return params;
+            }
+
+            @Override
+            protected void jobEnd(Map<String,String> code) {
+                String c = code.get("c");
+                String f = code.get("f");
+                if (getView()!=null){
+                    if (f.equals("PS")){
+                        getView().visiblePS();
+                    }else if (f.equals("DX")){
+//                        getView().visibleDX();
+                    }else if (f.equals("RQ")){
+//                        getView().visibleRQ(yl);
+                    }else if (f.equals("BM")){
+//                        getView().visibleBM();
+                    }
+
+                    if (c.equals("GD")){
+//                        getView().visiblegd(dy);
+                    }
                 }
             }
         });

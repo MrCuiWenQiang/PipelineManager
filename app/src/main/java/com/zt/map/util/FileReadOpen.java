@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -72,7 +73,7 @@ public class FileReadOpen {
                         throw new RuntimeException("配置表不合法！ 请按照格式填写");
                     }
                     LogUtil.e("-------TAB NAME-------", childTab);
-                    if (!map.containsKey(childTab)){
+                    if (!map.containsKey(childTab)) {
                         continue;
                     }
                     Map<String, List<Table>> f_m = map.get(childTab);
@@ -120,6 +121,7 @@ public class FileReadOpen {
         String tag = null;
         Map<String, String> childMap = new LinkedHashMap<>();
         while ((str = bReader.readLine()) != null) {
+
             str = str.trim();
             int index = str.indexOf("=");
             String key = str.substring(0, index);
@@ -129,22 +131,44 @@ public class FileReadOpen {
             String child = father.substring(0, i_index);
             String base = father.substring(i_index + 1, father.length());
 
-            if (tag == null) {
-                tag = key;
-            }
 
-            if (tag.equals(key)) {
+            if (key.equals(tag)) {
                 childMap.put(child, base);
             } else {
-                fatherMap.put(tag, childMap);
                 tag = key;
                 childMap = new LinkedHashMap<>();
                 childMap.put(child, base);
+                fatherMap.put(tag, childMap);
             }
         }
         return fatherMap;
     }
 
+    public static Map<String, List<String>> readCaiZi(InputStream file) throws IOException {
+        if (file == null) {
+            throw new RuntimeException("配置表不存在!");
+        }
+        InputStreamReader inputStreamReader = new InputStreamReader(file);
+        BufferedReader bReader = new BufferedReader(inputStreamReader);
+
+        Map<String, List<String>> maps = new HashMap<>();
+        List<String> params = null;
+        String str = null;
+        while ((str = bReader.readLine()) != null) {
+            if (str.startsWith("[")) {
+                int end = str.indexOf("]");
+                if (end <= 0) {
+                    throw new RuntimeException("类型名称不规范!");
+                }
+                String table = str.substring(1, end); //类型名称
+                params = new ArrayList<>();
+                maps.put(table, params);
+            } else {
+                params.add(str);
+            }
+        }
+        return maps;
+    }
 
     public static Map<String, Map<String, String>> readType(InputStream file) throws IOException {
         if (file == null) {

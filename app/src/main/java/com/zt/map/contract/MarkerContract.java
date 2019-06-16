@@ -29,6 +29,8 @@ public class MarkerContract {
         void query_LineType(String[] items);
         void querymanhole(String[] items);
         void queryUseStatus(String[] items);
+
+        void visiblePS();
     }
 
     public interface Presenter {
@@ -46,6 +48,8 @@ public class MarkerContract {
         void insertMarker(Tab_Marker tab,long lineId);//插入点
 
         void queryIsPhoto(long projectId);
+
+        void queryVisible(long typeId);
     }
 
     public interface Model {

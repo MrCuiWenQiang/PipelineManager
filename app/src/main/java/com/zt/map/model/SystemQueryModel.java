@@ -5,6 +5,7 @@ import com.zt.map.entity.db.system.Sys_Direction;
 import com.zt.map.entity.db.system.Sys_Embedding;
 import com.zt.map.entity.db.system.Sys_Features;
 import com.zt.map.entity.db.system.Sys_LineType;
+import com.zt.map.entity.db.system.Sys_Line_Manhole;
 import com.zt.map.entity.db.system.Sys_Manhole;
 import com.zt.map.entity.db.system.Sys_Material;
 import com.zt.map.entity.db.system.Sys_Pressure;
@@ -71,6 +72,33 @@ public class SystemQueryModel extends BaseMVPModel {
         });
     }
 
+    /**
+     * 查询材质
+     * @param code
+     * @param listener
+     */
+    public void queryCZ(final String code,final CommotListener<List<Sys_Line_Manhole>> listener) {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<List<Sys_Line_Manhole>>() {
+
+            @Override
+            protected List<Sys_Line_Manhole> jobContent() throws Exception {
+                Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class,"id = ?",code);
+                if (tables!=null){
+                    Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
+
+                    List<Sys_Line_Manhole> datas = LitPalUtils.selectWhere(Sys_Line_Manhole.class,"name = ?",f.getFatherCode());
+                    return datas;
+                }
+                return null;
+
+            }
+
+            @Override
+            protected void jobEnd(List<Sys_Line_Manhole> sysQualityTables) {
+                listener.result(sysQualityTables);
+            }
+        });
+    }
     /**
      * 查询附属物
      * @param code

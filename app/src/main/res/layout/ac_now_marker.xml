@@ -272,6 +272,34 @@
                         android:src="@mipmap/load" />
                 </LinearLayout>
             </LinearLayout>
+            <LinearLayout style="@style/edit_ll">
+
+                <TextView
+                    style="@style/edit_title"
+                    android:text="井盖状态" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="0.6"
+                    android:gravity="center_vertical">
+
+                    <EditText
+                        android:id="@+id/tv_jgzt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_style"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_load_jgzt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:src="@mipmap/load" />
+                </LinearLayout>
+            </LinearLayout>
 
             <LinearLayout style="@style/edit_ll">
 
@@ -360,6 +388,13 @@
                         android:src="@mipmap/load" />
                 </LinearLayout>
             </LinearLayout>
+
+            <ViewStub
+                android:id="@+id/vs_ps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout="@layout/vs_marker_ps" />
+
             <LinearLayout style="@style/edit_ll">
 
                 <TextView
