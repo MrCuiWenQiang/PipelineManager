@@ -40,18 +40,22 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
 
     @Override
     public void save(final Tab_Marker tab, final List<PhotoInfo> resultList) {
-        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Boolean>() {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<BaseMVPModel.MessageEntity>() {
 
             @Override
-            protected Boolean jobContent() throws Exception {
-                if (tab.getId()<=0){
-                    // TODO: 2019/6/14 需测试 
-                    Tab_Marker_Count count =LitPalUtils.selectsoloWhere(Tab_Marker_Count.class,"projectId = ? AND typeId=?",
+            protected BaseMVPModel.MessageEntity jobContent() throws Exception {
+                if (tab.getId() <= 0) {
+                    boolean isHave = LitPalUtils.selectCount(Tab_Marker.class,
+                            "projectId = ? AND wtdh=?", String.valueOf(tab.getProjectId()), tab.getWtdh()) > 0;
+                    if (isHave) {
+                        return BaseMVPModel.MessageEntity.fail("点号重复,请重新填写");
+                    }
+                    Tab_Marker_Count count = LitPalUtils.selectsoloWhere(Tab_Marker_Count.class, "projectId = ? AND typeId=?",
                             String.valueOf(tab.getProjectId()), String.valueOf(tab.getTypeId()));
-                    if (count==null){
+                    if (count == null) {
                         count = new Tab_Marker_Count();
                     }
-                    count.setCount(count.getCount()+1);
+                    count.setCount(count.getCount() + 1);
                     count.setProjectId(tab.getProjectId());
                     count.setTypeId(tab.getTypeId());
                     count.save();
@@ -60,17 +64,17 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
                 boolean status = tab.save();
                 long makerId = tab.getId();
                 long projectId = tab.getProjectId();
-                int count = LitPalUtils.selectCount(Tab_marker_photo.class,"markerId=? AND projectId=?",String.valueOf(makerId),
+                int count = LitPalUtils.selectCount(Tab_marker_photo.class, "markerId=? AND projectId=?", String.valueOf(makerId),
                         String.valueOf(projectId));
 
-                if (resultList != null&&status) {
+                if (resultList != null && status) {
                     List<Tab_marker_photo> pos = new ArrayList<>();
-                    int i=1;
+                    int i = 1;
                     for (PhotoInfo info : resultList) {
                         Tab_marker_photo p = new Tab_marker_photo();
                         p.setMarkerId(makerId);
                         p.setProjectId(projectId);
-                        p.setName(tab.getWtdh()+"_"+(count+i));
+                        p.setName(tab.getWtdh() + "_" + (count + i));
                         p.setPath(info.getPath());
                         pos.add(p);
                         i++;
@@ -78,22 +82,23 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
                     LitPalUtils.saveAll(pos);
                 }
 
-                return status;
+                return BaseMVPModel.MessageEntity.success();
             }
 
             @Override
-            protected void jobEnd(Boolean aBoolean) {
+            protected void jobEnd(BaseMVPModel.MessageEntity msg) {
                 if (getView() == null) {
                     return;
                 }
-                if (aBoolean) {
+                if (msg.isStatus()) {
                     getView().save_success();
                 } else {
-                    getView().save_Fail("保存失败");
+                    getView().save_Fail(msg.getMessage());
                 }
             }
         });
     }
+
     private String[] lineTypes;
 
     @Override
@@ -117,7 +122,8 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
     }
 
     String[] status;
-    public void queryUseStatus(final long typeId){
+
+    public void queryUseStatus(final long typeId) {
         if (status != null) {
             getView().queryUseStatus(status);
             return;
@@ -146,7 +152,7 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
 
     String[] manholes;
 
-    public void querymanhole(final long typeId){
+    public void querymanhole(final long typeId) {
         if (manholes != null) {
             getView().querymanhole(manholes);
             return;
@@ -171,6 +177,7 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
             }
         });
     }
+
     public void queryType(final long typeid) {
         if (lineTypes != null) {
             getView().query_LineType(lineTypes);
@@ -198,6 +205,7 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
             }
         });
     }
+
     @Override
     public void query_tzd(long typeId) {
         if (tzds != null) {
@@ -290,9 +298,9 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
                         , String.valueOf(project), String.valueOf(typeId));*/
 
 
-                Tab_Marker_Count count = LitPalUtils.selectsoloWhere(Tab_Marker_Count.class,"projectId = ? AND typeId=?", String.valueOf(project), String.valueOf(typeId));
+                Tab_Marker_Count count = LitPalUtils.selectsoloWhere(Tab_Marker_Count.class, "projectId = ? AND typeId=?", String.valueOf(project), String.valueOf(typeId));
 
-                if (count !=null) {
+                if (count != null) {
                     name.append(count.getCount() + 1);
                 } else {
                     name.append(1);
@@ -311,46 +319,68 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
 
     @Override
     public void insertMarker(final Tab_Marker tab, final long lineId) {
-        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Boolean>() {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<BaseMVPModel.MessageEntity>() {
 
             @Override
-            protected Boolean jobContent() throws Exception {
+            protected BaseMVPModel.MessageEntity jobContent() throws Exception {
+                //冗余代码
+                boolean isHave = LitPalUtils.selectCount(Tab_Marker.class,
+                        "projectId = ? AND wtdh=?", String.valueOf(tab.getProjectId()), tab.getWtdh()) > 0;
+                if (isHave) {
+                    return BaseMVPModel.MessageEntity.fail("点号重复,请重新填写");
+                }
+                Tab_Marker_Count count = LitPalUtils.selectsoloWhere(Tab_Marker_Count.class, "projectId = ? AND typeId=?",
+                        String.valueOf(tab.getProjectId()), String.valueOf(tab.getTypeId()));
+                if (count == null) {
+                    count = new Tab_Marker_Count();
+                }
+                count.setCount(count.getCount() + 1);
+                count.setProjectId(tab.getProjectId());
+                count.setTypeId(tab.getTypeId());
+                count.save();
+
                 boolean status = false;
                 status = tab.save();
                 long new_MarkerId = tab.getId();
+
                 Tab_Line line = LitPalUtils.selectsoloWhere(Tab_Line.class, "id = ?", String.valueOf(lineId));
                 Tab_Line endline = new Tab_Line();
                 ExcelUtil.CloneAttribute(line, endline);
-                endline.setId(-1);
+
+                endline.setId(0);
                 endline.setStartMarkerId(new_MarkerId);
                 endline.setStart_latitude(tab.getLatitude());
                 endline.setStart_longitude(tab.getLongitude());
+                endline.setQswh(tab.getWtdh());
+
+                endline.setEndMarkerId(line.getEndMarkerId());
                 endline.setEnd_latitude(line.getEnd_latitude());
                 endline.setEnd_longitude(line.getEnd_longitude());
-
-                endline.save();
+                endline.setZzwh(line.getZzwh());
+//                endline.setProjectId(line.getProjectId());//???未传递projectid
+                status = endline.save();
 
 
                 line.setEndMarkerId(new_MarkerId);
                 line.setEnd_latitude(tab.getLatitude());
                 line.setEnd_longitude(tab.getLongitude());
-
+                line.setZzwh(tab.getWtdh());
 
                 status = line.save();
 
 
-                return status;
+                return BaseMVPModel.MessageEntity.success();
             }
 
             @Override
-            protected void jobEnd(Boolean aBoolean) {
+            protected void jobEnd(BaseMVPModel.MessageEntity msg) {
                 if (getView() == null) {
                     return;
                 }
-                if (aBoolean) {
+                if (msg.isStatus()) {
                     getView().save_success();
                 } else {
-                    getView().save_Fail("保存失败");
+                    getView().save_Fail(msg.getMessage());
                 }
             }
         });
@@ -381,33 +411,33 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
 
     @Override
     public void queryVisible(final long typeId) {
-        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Map<String,String>>() {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Map<String, String>>() {
             @Override
-            protected Map<String,String> jobContent() throws Exception {
+            protected Map<String, String> jobContent() throws Exception {
                 Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(typeId));
                 Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
-                Map<String,String> params = new HashMap<>();
-                params.put("c",tables.getCode());
-                params.put("f",f.getFatherCode());
+                Map<String, String> params = new HashMap<>();
+                params.put("c", tables.getCode());
+                params.put("f", f.getFatherCode());
                 return params;
             }
 
             @Override
-            protected void jobEnd(Map<String,String> code) {
+            protected void jobEnd(Map<String, String> code) {
                 String c = code.get("c");
                 String f = code.get("f");
-                if (getView()!=null){
-                    if (f.equals("PS")){
+                if (getView() != null) {
+                    if (f.equals("PS")) {
                         getView().visiblePS();
-                    }else if (f.equals("DX")){
+                    } else if (f.equals("DX")) {
 //                        getView().visibleDX();
-                    }else if (f.equals("RQ")){
+                    } else if (f.equals("RQ")) {
 //                        getView().visibleRQ(yl);
-                    }else if (f.equals("BM")){
+                    } else if (f.equals("BM")) {
 //                        getView().visibleBM();
                     }
 
-                    if (c.equals("GD")){
+                    if (c.equals("GD")) {
 //                        getView().visiblegd(dy);
                     }
                 }
@@ -415,19 +445,19 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
         });
     }
 
-    public void queryProject(final long projectId){
-      DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<String>() {
+    public void queryProject(final long projectId) {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<String>() {
 
-          @Override
-          protected String jobContent() throws Exception {
-              Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class,"id=?",String.valueOf(projectId));
-              return project==null?"未知":project.getName();
-          }
+            @Override
+            protected String jobContent() throws Exception {
+                Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class, "id=?", String.valueOf(projectId));
+                return project == null ? "未知" : project.getName();
+            }
 
-          @Override
-          protected void jobEnd(String s) {
-              getView().queryProjectName(s);
-          }
-      });
+            @Override
+            protected void jobEnd(String s) {
+                getView().queryProjectName(s);
+            }
+        });
     }
 }

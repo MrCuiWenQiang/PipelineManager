@@ -115,11 +115,15 @@ public class ExcelUtil {
      * @param fileName  导出excel存放的地址（目录）
      * @param colName   excel中包含的列名（可以有多个）
      */
-    public static void initExcel(String tableName, String fileName, String[] colName) {
+    public static void initExcel(String tableName,String path, String fileName, String[] colName) {
         format();
         WritableWorkbook workbook = null;
         try {
-            File file = new File(fileName);
+            File filePath = new File(path);
+            if (!filePath.exists()) {
+                filePath.mkdirs();
+            }
+            File file = new File(path+"/"+fileName);
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -286,9 +290,15 @@ public class ExcelUtil {
                 String fieldCloneName = fieldClone[i].getName();
                 Field fie = map.get(fieldCloneName);
                 if (fie != null) {
-                    Method method1 = classClone.getMethod(getMethodName(fieldCloneName));
-                    Method method2 = classBecloned.getMethod(setMethodName(fieldCloneName), fie.getType());
-                    method2.invoke(beCloned, method1.invoke(clone));
+                    try {
+                        Method method1 = classClone.getMethod(getMethodName(fieldCloneName));
+                        Method method2 = classBecloned.getMethod(setMethodName(fieldCloneName), fie.getType());
+                        method2.invoke(beCloned, method1.invoke(clone));
+                    }catch (NoSuchMethodException e){
+                        ErrorUtil.showError(e);
+                        continue;
+                    }
+
                 }
             }
         } catch (Exception e) {

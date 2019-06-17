@@ -23,25 +23,15 @@
         android:gravity="center"
         android:layout_width="50dp"
         android:layout_height="50dp" />
-    <TextView
+    <ImageView
         android:id="@+id/ib_local"
         android:layout_marginTop="12dp"
         android:background="@drawable/item_l"
-        android:text="定位"
+        android:src="@mipmap/dingweipng"
         android:gravity="center"
         android:layout_width="50dp"
         android:layout_height="50dp" />
 
-    <TextView
-        android:id="@+id/ib_marker"
-        android:layout_marginTop="12dp"
-        android:visibility="gone"
-        android:background="@drawable/item_l"
-        android:text="@string/local"
-        android:textColor="@color/software_textColor_selected"
-        android:gravity="center"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
 
 
 </LinearLayout>

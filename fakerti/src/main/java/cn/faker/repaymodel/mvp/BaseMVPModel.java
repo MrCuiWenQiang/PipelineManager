@@ -15,6 +15,18 @@ public class BaseMVPModel {
         private String message;
         private T data;
 
+        public static MessageEntity success() {
+            return success(null);
+        }
+
+        public static MessageEntity success(String msg) {
+            return new MessageEntity(true, msg);
+        }
+
+        public static MessageEntity fail(String msg) {
+            return new MessageEntity(false, msg);
+        }
+
         public MessageEntity() {
         }
 

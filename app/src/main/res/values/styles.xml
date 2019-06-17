@@ -9,6 +9,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="list_base">
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:background">@color/lacteus</item>
+    </style>
     <style name="top_operate_ll">
         <item name="android:background">@drawable/click_bacground</item>
         <item name="android:gravity">center</item>

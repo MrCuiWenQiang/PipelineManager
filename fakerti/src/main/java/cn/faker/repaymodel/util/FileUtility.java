@@ -132,7 +132,7 @@ public class FileUtility {
         try {
             path = isExternalMemoryAvailable() ? context
                     .getExternalFilesDir(null).getPath() + "/" : context
-                    .getFilesDir().getPath() + "/";
+                    .getFilesDir().getPath();
             if(TextUtils.isEmpty(path)){
                 path= context.getApplicationContext().getFilesDir().getParentFile().getPath()+"/";
             }

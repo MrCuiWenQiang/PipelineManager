@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 
 import com.zt.map.R;
+import com.zt.map.constant.FileContract;
 import com.zt.map.contract.MainContract;
 import com.zt.map.entity.db.TaggingEntiiy;
 import com.zt.map.entity.db.system.Sys_Color;
@@ -318,8 +319,7 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
     }
 
 
-    private String defPath = "/excel";
-    private String filePath = Environment.getExternalStorageDirectory() + defPath;
+    private String filePath = FileContract.getOutFilePath();
 
     @Override
     public void outExcel(final Long projectId, final Context mContext) {
@@ -343,16 +343,17 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
 
                 String[] table_maker_names = ExcelUtil.colName(Tab_Marker.class);
                 String[] table_line_names = ExcelUtil.colName(Tab_Line.class);
-
-                String makerPath = filePath + "/" + table_maker_title + ".xls";
-                ExcelUtil.initExcel(table_maker_title, makerPath, table_maker_names);
+                String m_fileName = table_maker_title + ".xls";
+                String makerPath = filePath + "/" + m_fileName;
+                ExcelUtil.initExcel(table_maker_title, filePath,m_fileName, table_maker_names);
                 ExcelUtil.writeObjListToExcel(markers, makerPath, mContext);
 
-                String linePath = filePath + "/" + table_line_title + ".xls";
-                ExcelUtil.initExcel(table_line_title, linePath, table_line_names);
+                String l_fileName = table_line_title + ".xls";
+                String linePath = filePath + "/" + l_fileName;
+                ExcelUtil.initExcel(table_line_title, filePath,l_fileName, table_line_names);
                 ExcelUtil.writeObjListToExcel(lines, linePath, mContext);
 
-                return "文件已导出到" + defPath + "文件夹中";
+                return "文件已导出 ,点击查看文件";
             }
 
             @Override
@@ -368,33 +369,7 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
     @Deprecated
     @Override
     public void outAccess(final Long projectId, final Context mContext) {
-       /* DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Object>() {
 
-            @Override
-            protected Object jobContent() throws Exception {
-                Tab_Project project = LitPalUtils.selectsoloWhere(Tab_Project.class, "id = ?", String.valueOf(projectId));
-                List<Tab_Marker> markers = LitPalUtils.selectWhere(Tab_Marker.class, "projectId=?", String.valueOf(projectId));
-                List<Tab_Line> lines = LitPalUtils.selectWhere(Tab_Line.class, "projectId=?", String.valueOf(projectId));
-                if ((markers == null || markers.size() <= 0)
-                        && (lines == null || lines.size() <= 0)) {
-                    return "导出失败:该工程没有管点数据和管线数据";
-                }
-                String name = project.getName()  + DateUtils.getCurrentDateTime()+".mdb";
-                String path = AccessFileOut.copyAccess(mContext, R.raw.template,name);
-                AccessUtil.insert(markers,path);
-
-
-                return "文件已导出到" + defPath + "文件夹中";
-            }
-
-            @Override
-            protected void jobEnd(Object data) {
-//                listener.result(tab_projects);
-                if (getView() != null && data != null) {
-                    getView().outExcel((String) data);
-                }
-            }
-        });*/
     }
 
 

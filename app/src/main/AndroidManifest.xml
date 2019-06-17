@@ -88,6 +88,7 @@
         <activity android:name=".view.PhotoActivity" />
         <activity android:name=".view.MarkerNowActivity" />
         <activity android:name=".view.LineNowActivity" />
+        <activity android:name=".view.OutFileListActivity" />
     </application>
 
 </manifest>

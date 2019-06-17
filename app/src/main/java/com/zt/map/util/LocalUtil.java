@@ -21,7 +21,7 @@ public class LocalUtil {
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(1000);
+        option.setScanSpan(0);
         mLocationClient.setLocOption(option);
     }
 

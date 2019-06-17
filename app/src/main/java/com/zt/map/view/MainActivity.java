@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
@@ -95,9 +97,10 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     private ImageButton ibDrawDelete;
 
     private TextView ib_open;
-    private TextView ib_local;
-    private TextView ib_marker;
+    private ImageView ib_local;
     private TextView ib_bz;
+
+    private CoordinatorLayout root_l;
 
     private CanvalView v_canval;
 
@@ -147,8 +150,8 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         ibDrawPan.setSelected(true);
         ib_open = findViewById(R.id.ib_open);
         ib_local = findViewById(R.id.ib_local);
-        ib_marker = findViewById(R.id.ib_marker);
         ib_bz = findViewById(R.id.ib_bz);
+        root_l = findViewById(R.id.root_l);
 
     }
 
@@ -180,9 +183,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         ibDrawInsert.setOnClickListener(this);
         ibDrawInfo.setOnClickListener(this);
         ibDrawDelete.setOnClickListener(this);
-        ib_marker.setOnClickListener(this);
         ib_bz.setOnClickListener(this);
-
 
 
         v_canval.setOnDrawListener(new CanvalView.onDrawListener() {
@@ -232,7 +233,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     }
 
 
-    private void initMapStatus(){
+    private void initMapStatus() {
         baiduMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
             @Override
             public void onMapStatusChangeStart(MapStatus mapStatus) {
@@ -252,9 +253,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
             @Override
             public void onMapStatusChangeFinish(MapStatus mapStatus) {
                 zoomLevel = mapStatus.zoom;
-                if (islocal){
-                    isMe = false;
-                }
+
             }
         });
 
@@ -281,7 +280,6 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
 
     @Override
     public void onTouch(MotionEvent motionEvent) {
-        isMe = false;
     }
 
     @Override
@@ -349,13 +347,13 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     @Override
     protected void onDestroy() {
         bmapView.onDestroy();
-        mLocationClient.stop();
-        baiduMap.setMyLocationEnabled(false);
+        if (mLocationClient!=null){
+            mLocationClient.stop();
+            baiduMap.setMyLocationEnabled(false);
+        }
         super.onDestroy();
     }
 
-    boolean isMe = true;//是否是当前位置
-    boolean islocal = false;//是否开启定位
 
     @Override
     public void onClick(View v) {
@@ -396,10 +394,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                 local();
                 break;
             }
-            case R.id.ib_marker: {
-                isMe = true;
-                break;
-            }
+
             case R.id.ib_bz: {
                 showTaggings();
                 break;
@@ -429,7 +424,6 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     }
 
     LocationClient mLocationClient;
-    private BDLocation boot_location;//最后一次定位信息
 
     /**
      * 定位
@@ -441,49 +435,25 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                 showDialog("因为该功能需要使用定位，请打开手机定位开关");
                 return;
             }
-
-            if (ib_marker.getVisibility() == View.VISIBLE) {
-                ib_marker.setVisibility(View.GONE);
-                isMe = true;
-                islocal = false;
-                LocalUtil.stop();
-                baiduMap.setMyLocationEnabled(false);
-                return;
-            } else {
-                baiduMap.setMyLocationEnabled(true);
-                islocal = true;
-            }
-
-            ib_marker.setVisibility(View.VISIBLE);
-            if (boot_location != null) {
-                LatLng ll = new LatLng(boot_location.getLatitude(),
-                        boot_location.getLongitude());
-                MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(zoomLevel);
-                baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-            }
-
-            ToastUtility.showToast("定位开始");
+            baiduMap.setMyLocationEnabled(true);
             LocalUtil.start(getContext(), new LocalUtil.LocationListener() {
                 @Override
                 public void onReceiveLocation(BDLocation location) {
                     if (location == null || baiduMap == null) {
                         return;
                     }
+                    LocalUtil.stop();
                     MyLocationData locData = new MyLocationData.Builder()
                             .accuracy(location.getRadius())
                             // 此处设置开发者获取到的方向信息，顺时针0-360
                             .direction(location.getDirection()).latitude(location.getLatitude())
                             .longitude(location.getLongitude()).build();
                     baiduMap.setMyLocationData(locData);
-                    if (isMe) {
-                        LatLng ll = new LatLng(location.getLatitude(),
-                                location.getLongitude());
-                        MapStatus.Builder builder = new MapStatus.Builder();
-                        builder.target(ll).zoom(20f);
-                        baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-                    }
-                    boot_location = location;
+                    LatLng ll = new LatLng(location.getLatitude(),
+                            location.getLongitude());
+                    MapStatus.Builder builder = new MapStatus.Builder();
+                    builder.target(ll).zoom(20f);
+                    baiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
                 }
             });
 
@@ -498,22 +468,25 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
             if (!permision || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 //请求权限
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.ACCESS_COARSE_LOCATION}, 63);
                 return false;
             }
         }
         return true;
     }
+
     private boolean permissionFile() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //获取权限（如果没有开启权限，会弹出对话框，询问是否开启权限）
             int perm = checkCallingOrSelfPermission("android.permission.WRITE_EXTERNAL_STORAGE");
             boolean permision = (perm == PackageManager.PERMISSION_GRANTED);
-            if (!permision || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                  ) {
+            int rperm = checkCallingOrSelfPermission("android.permission.READ_EXTERNAL_STORAGE");
+            boolean rpermision = (rperm == PackageManager.PERMISSION_GRANTED);
+            if (!rpermision||!permision || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                    ) {
                 //请求权限
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 63);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE}, 63);
                 return false;
             }
         }
@@ -672,7 +645,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                     drawMarker(item.getLatitude(), item.getLongitude(), item.getId(), color, bitmap.getBitmap(), item.getWtdh());
                 }
             }
-            if (markers.size() > 0&&isOneLoad) {
+            if (markers.size() > 0 && isOneLoad) {
                 isOneLoad = false;
                 Tab_Marker mk = markers.get(markers.size() - 1);
                 LatLng ll = new LatLng(mk.getLatitude(),
@@ -706,7 +679,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     @Override
     public void queryMarker(Tab_Marker data) {
         dimiss();
-        if (data==null){
+        if (data == null) {
             ToastUtility.showToast("未查询到该点号");
             return;
         }
@@ -764,7 +737,16 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     @Override
     public void outExcel(String msg) {
         dimiss();
-        ToastUtility.showToast(msg);
+        if (msg.contains("失败")) {//懒得加失败回调 p层也未判断失败
+            ToastUtility.showToast(msg);
+        } else {
+            Snackbar.make(root_l, msg, Snackbar.LENGTH_LONG).setAction("查看文件", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toAcitvity(OutFileListActivity.class);
+                }
+            }).show();
+        }
     }
 
     private void drawMarker(double latitude, double longitude, long marerId, Bitmap icon, String name) {
@@ -782,7 +764,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         BitmapDescriptor bitmap = BitmapDescriptorFactory.fromView(ll);
         //构建MarkerOption，用于在地图上添加Marker
         OverlayOptions option = new MarkerOptions()
-                .position(latLng).draggable(true).flat(true).yOffset(height/2)
+                .position(latLng).draggable(true).flat(true)
                 .icon(bitmap).extraInfo(bundle);
         baiduMap.addOverlay(option);
     }
@@ -844,16 +826,21 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     final int TAG_SELECT_MARKER = 4;
     final int TAG_SELECT_OUT = 5;
     final int TAG_SELECT_INT = 6;
+    final int TAG_SELECT_OUT_QUERY = 7;
 
     private void showBottomDialog() {
         QMUIBottomSheet.BottomGridSheetBuilder builder = new QMUIBottomSheet.BottomGridSheetBuilder(getContext());
+
+
         builder.addItem(R.mipmap.create, "新建工程", TAG_SELECT_CREATE, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.open, "打开工程", TAG_SELECT_OPEN, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.clone, "关闭工程", TAG_SELECT_CLONE, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
-        builder.addItem(R.mipmap.photo, "工程相册", TAG_SELECT_PHOTO, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.markerquery, "查找点号", TAG_SELECT_MARKER, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
-        builder.addItem(R.mipmap.out, "导出工程", TAG_SELECT_OUT, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
-        builder.addItem(R.mipmap.input, "导入工程", TAG_SELECT_INT, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
+
+        builder.addItem(R.mipmap.out, "导出工程", TAG_SELECT_OUT, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
+        builder.addItem(R.mipmap.input, "导入工程", TAG_SELECT_INT, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
+        builder.addItem(R.mipmap.pps, "查看导出", TAG_SELECT_OUT_QUERY, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
+        builder.addItem(R.mipmap.photo, "工程相册", TAG_SELECT_PHOTO, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
         builder.setOnSheetItemClickListener(new QMUIBottomSheet.BottomGridSheetBuilder.OnSheetItemClickListener() {
             @Override
             public void onClick(QMUIBottomSheet dialog, View itemView) {
@@ -895,13 +882,17 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
 
                         break;
                     }
+                    case TAG_SELECT_OUT_QUERY: {
+                        toAcitvity(OutFileListActivity.class);
+                        break;
+                    }
                     case TAG_SELECT_OUT: {
-                        if (!permissionFile()){
+                        if (!permissionFile()) {
                             return;
                         }
                         if (projectId >= 0) {
                             showLoading();
-                            mPresenter.outExcel(projectId,getContext());
+                            mPresenter.outExcel(projectId, getContext());
 
                             /*showListDialog(new String[]{"导出为Excel","导出为mdb"}, new DialogInterface.OnClickListener() {
                                 @Override
@@ -957,7 +948,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                         }
                         dialog.dismiss();
                         showLoading();
-                        mPresenter.queryMarker(projectId,text.toString());
+                        mPresenter.queryMarker(projectId, text.toString());
                     }
                 }).show();
     }
