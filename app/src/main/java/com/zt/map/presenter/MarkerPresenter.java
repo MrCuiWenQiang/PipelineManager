@@ -31,12 +31,10 @@ import cn.faker.repaymodel.util.db.litpal.LitPalUtils;
 public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> implements MarkerContract.Presenter {
 
     private SystemQueryModel queryModel = new SystemQueryModel();
-    private MarkerModel markerModel;
+    private MarkerModel markerModel = new MarkerModel();
 
     private String[] tzds;
     private String[] fsws;
-    private String[] remarks = new String[]{"图边点", "出图点"};
-
 
     @Override
     public void save(final Tab_Marker tab, final List<PhotoInfo> resultList) {
@@ -99,8 +97,6 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
         });
     }
 
-    private String[] lineTypes;
-
     @Override
     public void queryMarker(long id) {
         if (markerModel == null) {
@@ -119,148 +115,6 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
                 }
             }
         });
-    }
-
-    String[] status;
-
-    public void queryUseStatus(final long typeId) {
-        if (status != null) {
-            getView().queryUseStatus(status);
-            return;
-        }
-
-        queryModel.queryUseStatus(typeId, new BaseMVPModel.CommotListener<List<Sys_UseStatus>>() {
-            @Override
-            public void result(List<Sys_UseStatus> sys_useStatuses) {
-                if (getView() == null) {
-                    return;
-                }
-                if (sys_useStatuses == null || sys_useStatuses.size() <= 0) {
-                    getView().fail("未获取到选择数据");
-                } else {
-                    List<String> datas = new ArrayList<>();
-                    for (Sys_UseStatus item : sys_useStatuses) {
-                        datas.add(item.getName());
-                    }
-                    status = datas.toArray(new String[datas.size()]);
-                    getView().queryUseStatus(status);
-
-                }
-            }
-        });
-    }
-
-    String[] manholes;
-
-    public void querymanhole(final long typeId) {
-        if (manholes != null) {
-            getView().querymanhole(manholes);
-            return;
-        }
-        queryModel.queryManhole(String.valueOf(typeId), new BaseMVPModel.CommotListener<List<Sys_Manhole>>() {
-            @Override
-            public void result(List<Sys_Manhole> sys_manholes) {
-                if (getView() == null) {
-                    return;
-                }
-                if (sys_manholes == null || sys_manholes.size() <= 0) {
-                    getView().fail("未获取到选择数据");
-                } else {
-                    List<String> datas = new ArrayList<>();
-                    for (Sys_Manhole item : sys_manholes) {
-                        datas.add(item.getName());
-                    }
-                    manholes = datas.toArray(new String[datas.size()]);
-                    getView().querymanhole(manholes);
-
-                }
-            }
-        });
-    }
-
-    public void queryType(final long typeid) {
-        if (lineTypes != null) {
-            getView().query_LineType(lineTypes);
-            return;
-        }
-        queryModel.queryLineType(String.valueOf(typeid), new BaseMVPModel.CommotListener<List<Sys_LineType>>() {
-            @Override
-            public void result(List<Sys_LineType> sys_lineTypes) {
-
-                if (getView() == null) {
-                    return;
-                }
-                if (sys_lineTypes == null || sys_lineTypes.size() <= 0) {
-                    getView().fail("未获取到选择数据");
-                } else {
-                    List<String> datas = new ArrayList<>();
-                    for (Sys_LineType item : sys_lineTypes) {
-                        datas.add(item.getName());
-                    }
-                    lineTypes = datas.toArray(new String[datas.size()]);
-                    getView().query_LineType(lineTypes);
-
-                }
-
-            }
-        });
-    }
-
-    @Override
-    public void query_tzd(long typeId) {
-        if (tzds != null) {
-            getView().query_tzd(tzds);
-            return;
-        }
-        queryModel.queryAspect(String.valueOf(typeId), new BaseMVPModel.CommotListener<List<Sys_Features>>() {
-            @Override
-            public void result(List<Sys_Features> sys_features) {
-                if (getView() == null) {
-                    return;
-                }
-                if (sys_features == null || sys_features.size() <= 0) {
-                    getView().fail("未获取到选择数据");
-                } else {
-                    List<String> datas = new ArrayList<>();
-                    for (Sys_Features item : sys_features) {
-                        datas.add(item.getName());
-                    }
-                    tzds = datas.toArray(new String[datas.size()]);
-                    getView().query_tzd(tzds);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void query_fsw(long typeId) {
-        if (fsws != null) {
-            getView().query_fsw(fsws);
-            return;
-        }
-        queryModel.queryAppendage(String.valueOf(typeId), new BaseMVPModel.CommotListener<List<Sys_Appendages>>() {
-            @Override
-            public void result(List<Sys_Appendages> sys_features) {
-                if (getView() == null) {
-                    return;
-                }
-                if (sys_features == null || sys_features.size() <= 0) {
-                    getView().fail("未获取到选择数据");
-                } else {
-                    List<String> datas = new ArrayList<>();
-                    for (Sys_Appendages item : sys_features) {
-                        datas.add(item.getName());
-                    }
-                    fsws = datas.toArray(new String[datas.size()]);
-                    getView().query_fsw(fsws);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void query_remarks(long typeId) {
-        getView().query_remarks(remarks);
     }
 
     @Override
@@ -409,42 +263,6 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
         });
     }
 
-    @Override
-    public void queryVisible(final long typeId) {
-        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Map<String, String>>() {
-            @Override
-            protected Map<String, String> jobContent() throws Exception {
-                Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(typeId));
-                Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
-                Map<String, String> params = new HashMap<>();
-                params.put("c", tables.getCode());
-                params.put("f", f.getFatherCode());
-                return params;
-            }
-
-            @Override
-            protected void jobEnd(Map<String, String> code) {
-                String c = code.get("c");
-                String f = code.get("f");
-                if (getView() != null) {
-                    if (f.equals("PS")) {
-                        getView().visiblePS();
-                    } else if (f.equals("DX")) {
-//                        getView().visibleDX();
-                    } else if (f.equals("RQ")) {
-//                        getView().visibleRQ(yl);
-                    } else if (f.equals("BM")) {
-//                        getView().visibleBM();
-                    }
-
-                    if (c.equals("GD")) {
-//                        getView().visiblegd(dy);
-                    }
-                }
-            }
-        });
-    }
-
     public void queryProject(final long projectId) {
         DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<String>() {
 
@@ -460,4 +278,93 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
             }
         });
     }
+
+    String[] status;
+
+    //使用状态
+    @Override
+    public void queryUseStatus() {
+        if (status != null && status.length > 0) {
+            getView().queryUseStatus(status);
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+    }
+
+    String[] manholes;
+
+    //井盖材质
+    @Override
+    public void querymanhole() {
+        if (manholes != null && manholes.length > 0) {
+            getView().querymanhole(manholes);
+            return;
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+    }
+
+    @Override
+    public void query_tzd() {
+        if (tzds != null && tzds.length > 0) {
+            getView().query_tzd(tzds);
+            return;
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+
+    }
+
+    @Override
+    public void query_fsw() {
+        if (fsws != null && fsws.length > 0) {
+            getView().query_fsw(fsws);
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+    }
+
+    String[] jgzts;
+
+    @Override
+    public void queryJGZTs() {
+        if (jgzts != null && jgzts.length > 0) {
+            getView().queryJGZTs(jgzts);
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+    }
+
+    String[] jglx;
+
+    @Override
+    public void queryJGLXs() {
+        if (jglx != null && jglx.length > 0) {
+            getView().queryJGLXs(jglx);
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+    }
+
+    @Override
+    public void queryVisible(final long typeId) {
+        markerModel.queryTable(typeId, new BaseMVPModel.CommotListener<Map<String, String[]>>() {
+            @Override
+            public void result(Map<String, String[]> dataMap) {
+                status = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_STATUS);
+                manholes = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_JGCZS);
+                tzds = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_TZDS);
+                fsws = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_FSWS);
+                jgzts = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_JGZTS);
+                jglx = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_JGLX);
+                if (getView()==null) return;
+                if (dataMap.containsKey(MarkerModel.TYPE_MARKER_FATHER_PS)) {
+                    getView().visiblePS();
+                }
+                getView().queryVisibleSuccess();
+            }
+        });
+    }
+
+
 }

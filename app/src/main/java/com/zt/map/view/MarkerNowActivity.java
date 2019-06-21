@@ -107,7 +107,6 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     private ImageView ivLoadSyzt;
     private EditText tvTcfs;
     private ImageView ivLoadTcfs;
-    private ImageView ivLoadGxlx;
     private EditText tvRemarks;
 
     private TextView tvSave;
@@ -123,6 +122,9 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
 
     private ViewStub vs_ps;
 
+    private String[] lists = new String[]{"相机", "工程相册"};
+
+    private final int PHOTOSELECTCODE = 56;
     @Override
     protected int getLayoutContentId() {
         return R.layout.ac_now_marker;
@@ -162,7 +164,6 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tvTcfs = findViewById(R.id.tv_tcfs);
         ivLoadTcfs = findViewById(R.id.iv_load_tcfs);
         tvRemarks = findViewById(R.id.tv_remarks);
-        ivLoadGxlx = findViewById(R.id.iv_load_gxlx);
 
         tvSave = findViewById(R.id.tv_save);
         tvExit = findViewById(R.id.tv_exit);
@@ -199,7 +200,6 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tvExit.setOnClickListener(this);
         ivLoadTzd.setOnClickListener(this);
         ivLoadFsw.setOnClickListener(this);
-        ivLoadGxlx.setOnClickListener(this);
         ivLoadJgcz.setOnClickListener(this);
         ivLoadSyzt.setOnClickListener(this);
 
@@ -262,31 +262,28 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_load_gxlx: {
-                mPresenter.queryType(typeId);
-                break;
-            }  case R.id.iv_load_jgzt: {
-               selectValue(tv_jgzt,new String[]{"完好","破损","丢失"});
+            case R.id.iv_load_jgzt: {
+                mPresenter.queryJGZTs();
                 break;
             }
             case R.id.iv_load_tzd: {
-                mPresenter.query_tzd(typeId);
+                mPresenter.query_tzd();
                 break;
             }
             case R.id.iv_load_fsw: {
-                mPresenter.query_fsw(typeId);
+                mPresenter.query_fsw();
                 break;
             }
             case R.id.iv_load_jgcz: {
-                mPresenter.querymanhole(typeId);
+                mPresenter.querymanhole();
                 break;
             }
             case R.id.iv_load_jglx: {
-               selectValue(tvJglx,new String[]{"方形","圆形","其它"});
+               mPresenter.queryJGLXs();
                 break;
             }
             case R.id.iv_load_syzt: {
-                mPresenter.queryUseStatus(typeId);
+                mPresenter.queryUseStatus();
                 break;
             }
             case R.id.tv_save: {
@@ -315,10 +312,6 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         selectValue(tvFsw, items);
     }
 
-    @Override
-    public void query_remarks(String[] items) {
-        selectValue(tvRemarks, items);
-    }
 
     @Override
     public void fail(String msg) {
@@ -368,7 +361,6 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         mPresenter.queryIsPhoto(projectId);
 
         mPresenter.queryVisible(typeId);
-        dimiss();
     }
 
     @Override
@@ -385,7 +377,6 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
 
     @Override
     public void queryTopType(Tab_Marker marker) {
-        dimiss();
         vMarker = marker;
         mPresenter.queryVisible(typeId);
         if (marker == null) return;
@@ -412,11 +403,7 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tvWtdh.setText(name);
     }
 
-    String[] lists = new String[]{"相机", "工程相册"};
 
-    private final String basePath = Environment.getExternalStorageDirectory() + "/guanxian";
-    private final int PHOTOCODE = 52;
-    private final int PHOTOSELECTCODE = 56;
 
     @Override
     public void createPhoto() {
@@ -464,10 +451,6 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         PhotoUtil.openZKCamera(MarkerNowActivity.this,project);
     }
 
-    @Override
-    public void query_LineType(String[] items) {
-        selectValue(tvGxlx, items);
-    }
 
     @Override
     public void querymanhole(String[] items) {
@@ -477,6 +460,16 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     @Override
     public void queryUseStatus(String[] items) {
         selectValue(tvSyzt, items);
+    }
+
+    @Override
+    public void queryJGZTs(String[] items) {
+        selectValue(tv_jgzt,items);
+    }
+
+    @Override
+    public void queryJGLXs(String[] items) {
+        selectValue(tvJglx,items);
     }
 
     private EditText tv_szhd;
@@ -499,6 +492,11 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
             tv_wjbh.setText(vMarker.getWjbh());
             tv_yhqksm.setText(vMarker.getQksm());
         }
+    }
+
+    @Override
+    public void queryVisibleSuccess() {
+        dimiss();
     }
 
     private void selectValue(final TextView tv, final String[] items) {

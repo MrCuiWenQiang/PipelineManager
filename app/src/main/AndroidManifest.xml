@@ -89,6 +89,8 @@
         <activity android:name=".view.MarkerNowActivity" />
         <activity android:name=".view.LineNowActivity" />
         <activity android:name=".view.OutFileListActivity" />
+        <activity android:name=".view.SettingActivity" />
+        <activity android:name=".view.SettngMakerActivity" />
     </application>
 
 </manifest>

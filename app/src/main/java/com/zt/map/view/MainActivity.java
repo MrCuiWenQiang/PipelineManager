@@ -827,6 +827,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     final int TAG_SELECT_OUT = 5;
     final int TAG_SELECT_INT = 6;
     final int TAG_SELECT_OUT_QUERY = 7;
+    final int TAG_SELECT_SETTING = 8;
 
     private void showBottomDialog() {
         QMUIBottomSheet.BottomGridSheetBuilder builder = new QMUIBottomSheet.BottomGridSheetBuilder(getContext());
@@ -835,12 +836,14 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
         builder.addItem(R.mipmap.create, "新建工程", TAG_SELECT_CREATE, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.open, "打开工程", TAG_SELECT_OPEN, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.clone, "关闭工程", TAG_SELECT_CLONE, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
+        builder.addItem(R.mipmap.out, "导出工程", TAG_SELECT_OUT, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
         builder.addItem(R.mipmap.markerquery, "查找点号", TAG_SELECT_MARKER, QMUIBottomSheet.BottomGridSheetBuilder.FIRST_LINE);
 
-        builder.addItem(R.mipmap.out, "导出工程", TAG_SELECT_OUT, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
-        builder.addItem(R.mipmap.input, "导入工程", TAG_SELECT_INT, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
         builder.addItem(R.mipmap.pps, "查看导出", TAG_SELECT_OUT_QUERY, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
         builder.addItem(R.mipmap.photo, "工程相册", TAG_SELECT_PHOTO, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
+        builder.addItem(R.mipmap.input, "导入工程", TAG_SELECT_INT, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
+        builder.addItem(R.mipmap.setting, "系统设置", TAG_SELECT_SETTING, QMUIBottomSheet.BottomGridSheetBuilder.SECOND_LINE);
+
         builder.setOnSheetItemClickListener(new QMUIBottomSheet.BottomGridSheetBuilder.OnSheetItemClickListener() {
             @Override
             public void onClick(QMUIBottomSheet dialog, View itemView) {
@@ -925,6 +928,10 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                             ToastUtility.showToast("请选择工程");
                         }
 
+                        break;
+                    }
+                    case TAG_SELECT_SETTING: {
+                        toAcitvity(SettingActivity.class);
                         break;
                     }
                 }

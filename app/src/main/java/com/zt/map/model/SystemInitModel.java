@@ -7,6 +7,8 @@ import com.zt.map.entity.db.system.Sys_Color;
 import com.zt.map.entity.db.system.Sys_Direction;
 import com.zt.map.entity.db.system.Sys_Embedding;
 import com.zt.map.entity.db.system.Sys_Features;
+import com.zt.map.entity.db.system.Sys_Jglx;
+import com.zt.map.entity.db.system.Sys_Jgzt;
 import com.zt.map.entity.db.system.Sys_LineType;
 import com.zt.map.entity.db.system.Sys_Line_Manhole;
 import com.zt.map.entity.db.system.Sys_Manhole;
@@ -31,7 +33,10 @@ import cn.faker.repaymodel.util.db.litpal.LitPalUtils;
 
 public class SystemInitModel extends BaseMVPModel {
     private final String[] vs_name = new String[]{"材料", "附属物", "管线类型", "井盖材质", "埋设方式", "使用状况", "方向", "特征", "颜色", "压力", "套管材质"};
-
+    //井盖状态
+    String[] jgzts = new String[]{"完好", "破损", "丢失"};
+    //井盖类型
+    String[] jglx = new String[]{"方形", "圆形", "其它"};
 
     public void initType(final CommotListener<Boolean> listener) {
         DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback() {
@@ -250,6 +255,22 @@ public class SystemInitModel extends BaseMVPModel {
                 }
                 LitPalUtils.saveAll(types);
                 LitPalUtils.saveAll(child_types);
+
+                List<Sys_Jglx> lxs = new ArrayList<>();
+                List<Sys_Jgzt> zts = new ArrayList<>();
+                for (String value:jglx) {
+                    Sys_Jglx jglx = new Sys_Jglx();
+                    jglx.setName(value);
+                    lxs.add(jglx);
+                }
+                for (String value:jgzts) {
+                    Sys_Jgzt jgzt = new Sys_Jgzt();
+                    jgzt.setName(value);
+                    zts.add(jgzt);
+                }
+                LitPalUtils.saveAll(lxs);
+                LitPalUtils.saveAll(zts);
+
                 return true;
             }
 

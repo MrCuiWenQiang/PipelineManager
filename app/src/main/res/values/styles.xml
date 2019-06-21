@@ -79,6 +79,16 @@
         <item name="android:layout_height">1dp</item>
     </style>
 
+    <style name="bt">
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <style name="tab_h_view">
         <item name="android:background">@color/d_rule</item>
         <item name="android:layout_width">1dp</item>
