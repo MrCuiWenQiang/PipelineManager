@@ -23,6 +23,7 @@
         <mapping class="com.zt.map.entity.db.system.Sys_Line_Manhole"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Jglx"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Jgzt"/>
+        <mapping class="com.zt.map.entity.db.system.Sys_Line_Data"/>
 
 
         <mapping class="com.zt.map.entity.db.tab.TabUser"/>

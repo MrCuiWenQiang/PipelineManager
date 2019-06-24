@@ -92,10 +92,7 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     private long start_marker;
     private long end__marker;
 
-    private String[] tgcls;
-    private String[] pressures;
-    private String[] directions;
-    private String[] dy;
+
 
 
     public static Bundle newInstance(Long projectId, long typeId) {
@@ -392,26 +389,6 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     public void queryUncertainData(String[] tgcls, String[] pressures, String[] directions) {
     }
 
-    @Override
-    public void showDX() {
-
-    }
-
-    @Override
-    public void showDL(String[] dy) {
-        this.dy = dy;
-    }
-
-    @Override
-    public void showPS(String[] lx) {
-        this.directions = lx;
-    }
-
-
-    @Override
-    public void showRQ(String[] yl) {
-        this.pressures = yl;
-    }
     private EditText tvLx;
     private ImageView ivLoadLx;
     private EditText tvQdyj;
@@ -427,7 +404,7 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
     private ImageView iv_load_gddj;
 
     @Override
-    public void visiblePS(final String[] lx, final String[] dhgd) {
+    public void visiblePS(final String[] lx, final String[] dhgd, final String[] ssyxzt, final String[] gxzl, final String[] gddj) {
         vs_dx_ps.inflate();
 
         llLx = findViewById(R.id.ll_lx);
@@ -465,19 +442,19 @@ public class LineNowActivity extends BaseMVPAcivity<LineContract.View, LinePrese
         niv_load_yxzt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectValue(ntv_yxzt, new String[]{"流水情况","溢井","淹管","见顶","1/2管","1/3管","少量","无水"});
+                selectValue(ntv_yxzt, ssyxzt);
             }
         });
         iv_load_gxzl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectValue(tv_gxzl, new String[]{"良","一般","差"});
+                selectValue(tv_gxzl,gxzl);
             }
         });
         iv_load_gddj.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectValue(tv_gddj, new String[]{"主干管","干管","支管","庭院管"});
+                selectValue(tv_gddj, gddj);
             }
         });
         Tab_Line data = topLine==null? tab_line:topLine;

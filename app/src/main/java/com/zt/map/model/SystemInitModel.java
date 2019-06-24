@@ -14,6 +14,7 @@ import com.zt.map.entity.db.system.Sys_Line_Manhole;
 import com.zt.map.entity.db.system.Sys_Manhole;
 import com.zt.map.entity.db.system.Sys_Material;
 import com.zt.map.entity.db.system.Sys_Pressure;
+import com.zt.map.entity.db.system.Sys_Line_Data;
 import com.zt.map.entity.db.system.Sys_TGCL;
 import com.zt.map.entity.db.system.Sys_Table;
 import com.zt.map.entity.db.system.Sys_Type;
@@ -218,13 +219,13 @@ public class SystemInitModel extends BaseMVPModel {
                 InputStream inec = MyApplication.getContext().getResources().openRawResource(R.raw.caizi);
                 Map<String, List<String>> lparams = FileReadOpen.readCaiZi(inec);
 
-               List<Sys_Line_Manhole> mans = new ArrayList<>();
+                List<Sys_Line_Manhole> mans = new ArrayList<>();
                 for (String key : lparams.keySet()) {
                     List<String> ls = lparams.get(key);
                     if (ls == null) {
                         continue;
                     }
-                    for (String v:ls){
+                    for (String v : ls) {
                         Sys_Line_Manhole item = new Sys_Line_Manhole();
                         item.setName(key);
                         item.setValue(v);
@@ -258,18 +259,35 @@ public class SystemInitModel extends BaseMVPModel {
 
                 List<Sys_Jglx> lxs = new ArrayList<>();
                 List<Sys_Jgzt> zts = new ArrayList<>();
-                for (String value:jglx) {
+                for (String value : jglx) {
                     Sys_Jglx jglx = new Sys_Jglx();
                     jglx.setName(value);
                     lxs.add(jglx);
                 }
-                for (String value:jgzts) {
+                for (String value : jgzts) {
                     Sys_Jgzt jgzt = new Sys_Jgzt();
                     jgzt.setName(value);
                     zts.add(jgzt);
                 }
                 LitPalUtils.saveAll(lxs);
                 LitPalUtils.saveAll(zts);
+
+                //线数据表
+                InputStream inp = MyApplication.getContext().getResources().openRawResource(R.raw.ps_line);
+                Map<String, List<String>> psparams = FileReadOpen.readCaiZi(inp);
+                List<Sys_Line_Data> pss=new ArrayList<>();
+                for (String name:psparams.keySet()) {
+                    List<String> vs = psparams.get(name);
+                    for (String value:vs) {
+                        Sys_Line_Data ps = new Sys_Line_Data();
+                        ps.setName(name);
+                        ps.setValue(value);
+                        pss.add(ps);
+                    }
+                }
+                LitPalUtils.saveAll(pss);
+
+
 
                 return true;
             }

@@ -2,10 +2,18 @@ package com.zt.map.entity.db.system;
 
 import org.litepal.crud.LitePalSupport;
 
-public class Sys_Line_Manhole extends LitePalSupport {
+public class Sys_Line_Data extends LitePalSupport {
     private long id;
-    private String name;//类别名（大类）
+    private String name;
     private String value;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -21,13 +29,5 @@ public class Sys_Line_Manhole extends LitePalSupport {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

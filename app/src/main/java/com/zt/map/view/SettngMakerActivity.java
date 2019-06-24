@@ -50,8 +50,9 @@ public class SettngMakerActivity extends BaseMVPAcivity<SettingMarkerContract.Vi
 
     @Override
     protected void initContentView() {
-        setLeftTitle("管点设置", R.color.white);
-        setToolBarBackgroundColor(R.color.blue);
+        setStatusBar(R.color.blue_1);
+        setTitle("管点设置", R.color.white);
+        setToolBarBackgroundColor(R.color.blue_1);
 
         tv_marker_type = findViewById(R.id.tv_marker_type);
 

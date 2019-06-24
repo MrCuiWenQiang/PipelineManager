@@ -25,8 +25,9 @@ public class SettingActivity extends BaseMVPAcivity<SettingContract.View, Settin
 
     @Override
     protected void initContentView() {
+        setStatusBar(R.color.blue_1);
         setLeftTitle("系统设置", R.color.white);
-        setToolBarBackgroundColor(R.color.blue);
+        setToolBarBackgroundColor(R.color.blue_1);
 
         qmui_list = findViewById(R.id.qmui_list);
     }
@@ -60,6 +61,7 @@ public class SettingActivity extends BaseMVPAcivity<SettingContract.View, Settin
                     break;
                 }
                 case ITEM_DATA_LINE: {
+                    toAcitvity(SettingLineActivity.class);
                     break;
                 }
             }

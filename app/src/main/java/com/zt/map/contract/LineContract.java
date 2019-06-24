@@ -28,11 +28,8 @@ public class LineContract {
         void queryUncertainData(String[] tgcls, String[] pressures, String[] directions);
 
 
-        void showDX();
-        void showDL(String[] dy);
-        void showPS(String[] lx);
-        void showRQ(String[] yl);
-        void visiblePS(String[] lx,String[] dhgd);
+
+        void visiblePS( String[] lx,  String[] dhgd,  String[] ssyxzt,  String[] gxzl,  String[] gddj);
 
         void visibleDX();
         void visibleRQ(String[] yl);

@@ -11,6 +11,7 @@ import com.zt.map.contract.LineContract;
 import com.zt.map.entity.db.system.Sys_Direction;
 import com.zt.map.entity.db.system.Sys_Embedding;
 import com.zt.map.entity.db.system.Sys_LineType;
+import com.zt.map.entity.db.system.Sys_Line_Data;
 import com.zt.map.entity.db.system.Sys_Line_Manhole;
 import com.zt.map.entity.db.system.Sys_Pressure;
 import com.zt.map.entity.db.system.Sys_TGCL;
@@ -50,7 +51,6 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
 //    private String[] tgcls;
 //    private String[] pressures;
 //    private String[] directions;
-
 
 
     @Override
@@ -107,9 +107,10 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
             }
         });
     }
+
     private String[] czs;
 
-    public void queryCZ(final long typeid){
+    public void queryCZ(final long typeid) {
         if (czs != null) {
             getView().queryCZ(czs);
             return;
@@ -204,9 +205,9 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
                 if (getView() == null) {
                     return;
                 }
-                String[] tgcls=null;
-                String[] pressures=null;
-                String[] directions=null;
+                String[] tgcls = null;
+                String[] pressures = null;
+                String[] directions = null;
                 if (map != null) {
                     List<Sys_TGCL> tgclsl = null;
                     List<Sys_Pressure> pressuresl = null;
@@ -268,7 +269,8 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
     }
 
     String[] status;
-    public void queryUseStatus(final long typeId){
+
+    public void queryUseStatus(final long typeId) {
         if (status != null) {
             getView().queryUseStatus(status);
             return;
@@ -334,16 +336,16 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
                 Tab_Marker e_maker = null;
                 int errorValue = 10;
                 BaiduMap baiduMap = MapUtil.getmBaiduMap();
-                if (baiduMap!=null){
+                if (baiduMap != null) {
                     MapStatus status = baiduMap.getMapStatus();
                     float now_zoom = status.zoom;
-                    if (now_zoom >= 20){
+                    if (now_zoom >= 20) {
                         errorValue = 5;
-                    }else if (now_zoom >18){
+                    } else if (now_zoom > 18) {
                         errorValue = 10;
-                    }else if (now_zoom>=10 && 18 >=now_zoom){
+                    } else if (now_zoom >= 10 && 18 >= now_zoom) {
                         errorValue = 50;
-                    }else if (now_zoom<10 ){
+                    } else if (now_zoom < 10) {
                         errorValue = 200;
                     }
                 }
@@ -390,53 +392,71 @@ public class LinePresenter extends BaseMVPPresenter<LineContract.View> implement
     }
 
 
-
-
-
-
-
-
-    String[] dy = new String[]{"0.22kV","0.38kV","10kV","35kV","110kV","220kV","500kV"};
-    String[] lx = new String[]{"0","1"};
-    String[] yl = new String[]{"高压","次高压","中压","低压"};
-    String[] dh = new String[]{"是","否"};
     @Override
     public void queryShowType(final long type) {
 //        getView().showPS(lx);
 
-        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Map<String,String>>() {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Map<String, Object>>() {
             @Override
-            protected Map<String,String> jobContent() throws Exception {
+            protected Map<String, Object> jobContent() throws Exception {
                 Sys_Table tables = LitPalUtils.selectsoloWhere(Sys_Table.class, "id = ?", String.valueOf(type));
                 Sys_Type_Child f = LitPalUtils.selectsoloWhere(Sys_Type_Child.class, "name = ?", String.valueOf(tables.getName()));
-                Map<String,String> params = new HashMap<>();
-                params.put("c",tables.getCode());
-                params.put("f",f.getFatherCode());
-                return params;
+                List<Sys_Line_Data> l = LitPalUtils.selectWhere(Sys_Line_Data.class);
+                Map<String, Object> dataMaps = new HashMap<>();
+
+                Map<String, String> params = new HashMap<>();
+                params.put("c", tables.getCode());
+                params.put("f", f.getFatherCode());
+                dataMaps.put("f", params);
+
+                Map<String, List<String>> datam = new HashMap<>();
+                for (Sys_Line_Data d : l) {
+                    String key_name = d.getName();
+                    if (!datam.containsKey(key_name)) {
+                        datam.put(key_name, new ArrayList());
+                    }
+                    List<String> ls = datam.get(key_name);
+                    ls.add(d.getValue());
+                }
+                dataMaps.put("m", datam);
+                return dataMaps;
             }
 
             @Override
-            protected void jobEnd(Map<String,String> code) {
+            protected void jobEnd(Map<String, Object> datam) {
+                Map<String, String> code = (Map<String, String>) datam.get("f");
+                Map<String, List<String>> dm = (Map<String, List<String>>) datam.get("m");
+
                 String c = code.get("c");
                 String f = code.get("f");
-                if (getView()!=null){
-                    if (f.equals("PS")){
-                        getView().visiblePS(lx,dh);
-                    }else if (f.equals("DX")){
+                if (getView() != null) {
+                    // TODO: 2019/6/24 数据填充
+                    if (f.equals("PS")) {
+                        String[] lx = toList(dm.get("流向"));
+                        String[] dh = toList(dm.get("导虹管段"));
+                        String[] ssyxzt = toList(dm.get("设施运行状态"));
+                        String[] gxzl = toList(dm.get("管线质量"));
+                        String[] gddj = toList(dm.get("管道等级"));
+                        getView().visiblePS(lx, dh,ssyxzt,gxzl,gddj);
+                    } else if (f.equals("DX")) {
                         getView().visibleDX();
-                    }else if (f.equals("RQ")){
+                    } else if (f.equals("RQ")) {
+                        String[] yl = toList(dm.get("压力"));
                         getView().visibleRQ(yl);
-                    }else if (f.equals("BM")){
+                    } else if (f.equals("BM")) {
 //                        getView().visibleBM();
                     }
-
-                    if (c.equals("GD")){
+                    if (c.equals("GD")) {
+                        String[] dy = toList(dm.get("电压"));
                         getView().visiblegd(dy);
                     }
                 }
             }
         });
     }
+
+
+
 
     public static Map<Long, Double> sortMapByValue(Map<Long, Double> oriMap) {
         if (oriMap == null || oriMap.isEmpty()) {

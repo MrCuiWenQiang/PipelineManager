@@ -91,6 +91,7 @@
         <activity android:name=".view.OutFileListActivity" />
         <activity android:name=".view.SettingActivity" />
         <activity android:name=".view.SettngMakerActivity" />
+        <activity android:name=".view.SettingLineActivity" />
     </application>
 
 </manifest>

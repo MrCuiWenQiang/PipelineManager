@@ -2,6 +2,7 @@ package cn.faker.repaymodel.mvp;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * Function : 基础p层 与activity生命周期相结合
@@ -48,4 +49,8 @@ public class BaseMVPPresenter<V> {
     public void onDestroy() {
     }
 
+    protected String[] toList(List<String> sl) {
+        if (sl == null) return null;
+        return sl.toArray(new String[sl.size()]);
+    }
 }
