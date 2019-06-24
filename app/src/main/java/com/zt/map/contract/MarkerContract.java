@@ -33,12 +33,14 @@ public class MarkerContract {
         void queryProjectName(String project);
 
         void querymanhole(String[] items);
+        void querytcfss(String[] items);
 
         void queryUseStatus(String[] items);
 
         void queryJGZTs(String[] items);
 
         void queryJGLXs(String[] items);
+        void queryszwz(String[] items);
 
         void visiblePS();
         void queryVisibleSuccess();
@@ -54,6 +56,8 @@ public class MarkerContract {
         void insertMarker(Tab_Marker tab, long lineId);//插入点
 
         void queryIsPhoto(long projectId);
+
+        void querySZWZ();
 
         void queryTopType(long project, long typeId);
 

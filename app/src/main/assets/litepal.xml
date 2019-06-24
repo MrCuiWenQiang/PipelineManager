@@ -24,6 +24,8 @@
         <mapping class="com.zt.map.entity.db.system.Sys_Jglx"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Jgzt"/>
         <mapping class="com.zt.map.entity.db.system.Sys_Line_Data"/>
+        <mapping class="com.zt.map.entity.db.system.Sys_szwz"/>
+        <mapping class="com.zt.map.entity.db.system.Sys_tcfs"/>
 
 
         <mapping class="com.zt.map.entity.db.tab.TabUser"/>

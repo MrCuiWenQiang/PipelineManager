@@ -292,12 +292,22 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
     }
 
     String[] manholes;
+    String[] tcfss;
 
     //井盖材质
     @Override
     public void querymanhole() {
         if (manholes != null && manholes.length > 0) {
             getView().querymanhole(manholes);
+            return;
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+    }
+
+    public void querytcfs() {
+        if (tcfss != null && tcfss.length > 0) {
+            getView().querytcfss(tcfss);
             return;
         } else {
             getView().fail("未获取到选择数据");
@@ -336,6 +346,7 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
     }
 
     String[] jglx;
+    String[] szwz;
 
     @Override
     public void queryJGLXs() {
@@ -346,6 +357,13 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
         }
     }
 
+    public void querySZWZ() {
+        if (szwz != null && szwz.length > 0) {
+            getView().queryszwz(szwz);
+        } else {
+            getView().fail("未获取到选择数据");
+        }
+    }
     @Override
     public void queryVisible(final long typeId) {
         markerModel.queryTable(typeId, new BaseMVPModel.CommotListener<Map<String, String[]>>() {
@@ -353,10 +371,12 @@ public class MarkerPresenter extends BaseMVPPresenter<MarkerContract.View> imple
             public void result(Map<String, String[]> dataMap) {
                 status = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_STATUS);
                 manholes = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_JGCZS);
+                tcfss = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_TCFS);
                 tzds = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_TZDS);
                 fsws = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_FSWS);
                 jgzts = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_JGZTS);
                 jglx = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_JGLX);
+                szwz = dataMap.get(MarkerModel.TABLE_MARKER_TYPE_SZWZ);
                 if (getView()==null) return;
                 if (dataMap.containsKey(MarkerModel.TYPE_MARKER_FATHER_PS)) {
                     getView().visiblePS();

@@ -9,6 +9,8 @@ import com.zt.map.entity.db.system.Sys_Manhole;
 import com.zt.map.entity.db.system.Sys_Table;
 import com.zt.map.entity.db.system.Sys_Type_Child;
 import com.zt.map.entity.db.system.Sys_UseStatus;
+import com.zt.map.entity.db.system.Sys_szwz;
+import com.zt.map.entity.db.system.Sys_tcfs;
 import com.zt.map.entity.db.tab.Tab_Marker;
 
 import java.util.ArrayList;
@@ -44,11 +46,13 @@ public class MarkerModel extends BaseMVPModel implements MarkerContract.Model {
     public final static String TABLE_MARKER_TYPE_FSWS = "附属物";
     public final static String TABLE_MARKER_TYPE_JGZTS = "井盖状态";
     public final static String TABLE_MARKER_TYPE_JGLX = "井盖类型";
+    public final static String TABLE_MARKER_TYPE_SZWZ = "所在位置";
+    public final static String TABLE_MARKER_TYPE_TCFS = "探测方式";
 
     public final static String TYPE_MARKER_FATHER_PS = "PS";
 
     public final static String[] tabs = new String[]{TABLE_MARKER_TYPE_STATUS, TABLE_MARKER_TYPE_JGCZS, TABLE_MARKER_TYPE_TZDS,
-            TABLE_MARKER_TYPE_FSWS, TABLE_MARKER_TYPE_JGZTS, TABLE_MARKER_TYPE_JGLX};
+            TABLE_MARKER_TYPE_FSWS, TABLE_MARKER_TYPE_JGZTS, TABLE_MARKER_TYPE_JGLX,TABLE_MARKER_TYPE_SZWZ,TABLE_MARKER_TYPE_TCFS};
 
     Map<String, Map<String, Long>> ids;//用于存放数据对应id 通过get方法获取选择项的id
 
@@ -141,6 +145,25 @@ public class MarkerModel extends BaseMVPModel implements MarkerContract.Model {
                     jgztIDs.put(item.getName(), item.getId());
                 }
                 String[] jgzt = datas.toArray(new String[datas.size()]);
+                //所在位置
+                List<Sys_szwz> szwzs = LitPalUtils.selectWhere(Sys_szwz.class);
+                datas.clear();
+                Map<String, Long> szwzIDs = new LinkedHashMap<>();
+                for (Sys_szwz item : szwzs) {
+                    datas.add(item.getValue());
+                    szwzIDs.put(item.getValue(), item.getId());
+                }
+                String[] szwz = datas.toArray(new String[datas.size()]);
+
+                //所在位置
+                List<Sys_tcfs> tcfss = LitPalUtils.selectWhere(Sys_tcfs.class);
+                datas.clear();
+                Map<String, Long> tcfsIDs = new LinkedHashMap<>();
+                for (Sys_tcfs item : tcfss) {
+                    datas.add(item.getValue());
+                    tcfsIDs.put(item.getValue(), item.getId());
+                }
+                String[] tcfs = datas.toArray(new String[datas.size()]);
 
                 params.put(TABLE_MARKER_TYPE_STATUS, status);
                 params.put(TABLE_MARKER_TYPE_JGCZS, jgczs);
@@ -148,6 +171,8 @@ public class MarkerModel extends BaseMVPModel implements MarkerContract.Model {
                 params.put(TABLE_MARKER_TYPE_FSWS, fsws);
                 params.put(TABLE_MARKER_TYPE_JGZTS, jgzt);
                 params.put(TABLE_MARKER_TYPE_JGLX, jglx);
+                params.put(TABLE_MARKER_TYPE_SZWZ, szwz);
+                params.put(TABLE_MARKER_TYPE_TCFS, tcfs);
 
                 ids.put(TABLE_MARKER_TYPE_STATUS, userStatuIds);
                 ids.put(TABLE_MARKER_TYPE_JGCZS, manholeIds);
@@ -155,6 +180,8 @@ public class MarkerModel extends BaseMVPModel implements MarkerContract.Model {
                 ids.put(TABLE_MARKER_TYPE_FSWS, appendageIDs);
                 ids.put(TABLE_MARKER_TYPE_JGZTS, jgztIDs);
                 ids.put(TABLE_MARKER_TYPE_JGLX, jgIDs);
+                ids.put(TABLE_MARKER_TYPE_SZWZ, szwzIDs);
+                ids.put(TABLE_MARKER_TYPE_TCFS, tcfsIDs);
 
 
                 String c_code = tables.getCode();

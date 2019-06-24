@@ -18,6 +18,8 @@ import com.zt.map.entity.db.system.Sys_Manhole;
 import com.zt.map.entity.db.system.Sys_Table;
 import com.zt.map.entity.db.system.Sys_Type_Child;
 import com.zt.map.entity.db.system.Sys_UseStatus;
+import com.zt.map.entity.db.system.Sys_szwz;
+import com.zt.map.entity.db.system.Sys_tcfs;
 import com.zt.map.model.MarkerModel;
 import com.zt.map.model.SystemQueryModel;
 import com.zt.map.util.Base64Util;
@@ -157,6 +159,24 @@ public class SettingMarkerPresenter extends BaseMVPPresenter<SettingMarkerContra
                     } else {
                         manhole.save();
                     }
+                } else if (fatherName.equals(MarkerModel.TABLE_MARKER_TYPE_SZWZ)) {
+                    Sys_szwz manhole = new Sys_szwz();
+                    manhole.setId(finalId);
+                    manhole.setValue(finalValue);
+                    if (finalId > 0) {
+                        manhole.update(finalId);
+                    } else {
+                        manhole.save();
+                    }
+                } else if (fatherName.equals(MarkerModel.TABLE_MARKER_TYPE_TCFS)) {
+                    Sys_tcfs manhole = new Sys_tcfs();
+                    manhole.setId(finalId);
+                    manhole.setValue(finalValue);
+                    if (finalId > 0) {
+                        manhole.update(finalId);
+                    } else {
+                        manhole.save();
+                    }
                 }
                 return BaseMVPModel.MessageEntity.success();
             }
@@ -262,6 +282,10 @@ public class SettingMarkerPresenter extends BaseMVPPresenter<SettingMarkerContra
                     int count = LitPalUtils.deleteData(Sys_Features.class, "id = ?", String.valueOf(id));
                 }else if (fatherName.equals(MarkerModel.TABLE_MARKER_TYPE_FSWS)) {
                     int count = LitPalUtils.deleteData(Sys_Appendages.class, "id = ?", String.valueOf(id));
+                }else if (fatherName.equals(MarkerModel.TABLE_MARKER_TYPE_SZWZ)) {
+                    int count = LitPalUtils.deleteData(Sys_szwz.class, "id = ?", String.valueOf(id));
+                }else if (fatherName.equals(MarkerModel.TABLE_MARKER_TYPE_TCFS)) {
+                    int count = LitPalUtils.deleteData(Sys_tcfs.class, "id = ?", String.valueOf(id));
                 }
                 return BaseMVPModel.MessageEntity.success();
             }

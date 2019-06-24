@@ -202,6 +202,8 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         ivLoadFsw.setOnClickListener(this);
         ivLoadJgcz.setOnClickListener(this);
         ivLoadSyzt.setOnClickListener(this);
+        ivLoadSzwz.setOnClickListener(this);
+        ivLoadTcfs.setOnClickListener(this);
 
     }
 
@@ -276,6 +278,12 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
             }
             case R.id.iv_load_jgcz: {
                 mPresenter.querymanhole();
+                break;
+            } case R.id.iv_load_tcfs: {
+                mPresenter.querytcfs();
+                break;
+            }case R.id.iv_load_szwz: {
+                mPresenter.querySZWZ();
                 break;
             }
             case R.id.iv_load_jglx: {
@@ -458,6 +466,11 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     }
 
     @Override
+    public void querytcfss(String[] items) {
+        selectValue(tvTcfs, items);
+    }
+
+    @Override
     public void queryUseStatus(String[] items) {
         selectValue(tvSyzt, items);
     }
@@ -470,6 +483,11 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     @Override
     public void queryJGLXs(String[] items) {
         selectValue(tvJglx,items);
+    }
+
+    @Override
+    public void queryszwz(String[] items) {
+        selectValue(tvSzwz,items);
     }
 
     private EditText tv_szhd;

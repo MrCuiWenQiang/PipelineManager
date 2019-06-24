@@ -20,6 +20,7 @@ import com.zt.map.entity.db.system.Sys_Table;
 import com.zt.map.entity.db.system.Sys_Type;
 import com.zt.map.entity.db.system.Sys_Type_Child;
 import com.zt.map.entity.db.system.Sys_UseStatus;
+import com.zt.map.entity.db.system.Sys_tcfs;
 import com.zt.map.util.FileReadOpen;
 import com.zt.map.util.Table;
 
@@ -287,8 +288,14 @@ public class SystemInitModel extends BaseMVPModel {
                 }
                 LitPalUtils.saveAll(pss);
 
-
-
+                List<Sys_tcfs> tcfss = new ArrayList<>();
+                Sys_tcfs tcfs1 = new Sys_tcfs();
+                tcfs1.setValue("探测");
+                Sys_tcfs tcfs2 = new Sys_tcfs();
+                tcfs2.setValue("竣工");
+                tcfss.add(tcfs1);
+                tcfss.add(tcfs2);
+                LitPalUtils.saveAll(tcfss);
                 return true;
             }
 
