@@ -57,12 +57,14 @@ import com.zt.map.entity.db.TaggingEntiiy;
 import com.zt.map.entity.db.system.Sys_Color;
 import com.zt.map.entity.db.tab.Tab_Line;
 import com.zt.map.entity.db.tab.Tab_Marker;
+import com.zt.map.entity.db.tab.Tab_Project;
 import com.zt.map.presenter.MainPresenter;
 import com.zt.map.util.Base64Util;
 import com.zt.map.util.LocalUtil;
 import com.zt.map.util.LocalUtils;
 import com.zt.map.util.MapUtil;
 import com.zt.map.view.widget.CreateDialog;
+import com.zt.map.view.widget.ProjectDialog;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -582,17 +584,43 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     }
 
     @Override
-    public void queryProjects(String[] projects, final Long[] ids) {
-        new QMUIDialog.CheckableDialogBuilder(getContext())
+    public void queryProjects(List<Tab_Project> tab_projects) {
+        final ProjectDialog pdialog = new ProjectDialog().setTab_projects(tab_projects);
+        pdialog.setOnItemListener(new ProjectDialog.OnItemListener() {
+            @Override
+            public void onDelete(final long id) {
+                new QMUIDialog.MessageDialogBuilder(getContext()).setMessage("是否删除该项目?").addAction(0, "删除", QMUIDialogAction.ACTION_PROP_NEGATIVE, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                        pdialog.dismiss();
+                        showLoading();
+                        mPresenter.delete_Project(id);
+                    }
+                }).addAction("取消", new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        dialog.dismiss();
+                    }
+                }).show();
+
+            }
+
+            @Override
+            public void onClick(long id) {
+                pdialog.dismiss();
+                mPresenter.queryProject(id);
+            }
+        }).show(getSupportFragmentManager(),"gg");
+/*        new QMUIDialog.CheckableDialogBuilder(getContext())
                 .addItems(projects, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         showLoading();
-                        mPresenter.queryProject(ids[which]);
                     }
                 }).setTitle("工程列表")
-                .show();
+                .show();*/
     }
 
     @Override
@@ -747,6 +775,13 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                 }
             }).show();
         }
+    }
+
+    @Override
+    public void delete_Project() {
+        dimiss();
+        isOneLoad = true;
+        mPresenter.queryProjects();
     }
 
     private void drawMarker(double latitude, double longitude, long marerId, Bitmap icon, String name) {

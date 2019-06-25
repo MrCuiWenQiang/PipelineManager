@@ -16,14 +16,13 @@ public class MainContract {
     public interface View {
         void queryType(String[] tabNames, Long[] typeIds,Integer[] colors);
 
-        void queryProjects(String[] projects, Long[] ids);
+        void queryProjects(List<Tab_Project> tab_projects);
         void queryProjects_fail(String msg);
 
         void createProject_success(String msg,long projectId);
         void createProject_fail(String msg);
 
         void queryProject(List<Tab_Marker> markers, List<Tab_Line> lines,long projectId);
-
         void delete_success(String msg,int type);
         void delete_fail(String msg);
         void update();
@@ -32,6 +31,7 @@ public class MainContract {
         void taggers(List<TaggingEntiiy> taggings);
 
         void outExcel(String msg);
+        void delete_Project();
     }
 
     public interface Presenter {
@@ -48,6 +48,8 @@ public class MainContract {
         void queryMarker(long projectId, String text);
          void outExcel(Long projectId, final Context mContext);
          void outAccess(Long projectId, final Context mContext);
+
+        void delete_Project(long id);
     }
 
     public interface Model {

@@ -19,7 +19,7 @@ public class MainModel extends BaseMVPModel implements MainContract.Model {
 
             @Override
             protected List<Tab_Project> jobContent() throws Exception {
-                List<Tab_Project> list =   LitPalUtils.selectWhere(Tab_Project.class);
+                List<Tab_Project> list =   LitPalUtils.selectWheres("createTime DESC",Tab_Project.class);
 
                 return list;
             }

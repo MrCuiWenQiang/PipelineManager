@@ -102,15 +102,7 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
                     getView().queryProjects_fail("暂时没有工程");
                     return;
                 }
-                List<String> names = new ArrayList<>();
-                List<Long> ids = new ArrayList<>();
-                for (Tab_Project item : tab_projects) {
-                    names.add(item.getName());
-                    ids.add(item.getId());
-                }
-                String[] p_names = names.toArray(new String[names.size()]);
-                Long[] p_ids = ids.toArray(new Long[names.size()]);
-                getView().queryProjects(p_names, p_ids);
+                getView().queryProjects(tab_projects);
             }
         });
     }
@@ -370,6 +362,24 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
     @Override
     public void outAccess(final Long projectId, final Context mContext) {
 
+    }
+
+    @Override
+    public void delete_Project(final long id) {
+        DBThreadHelper.startThreadInPool(new DBThreadHelper.ThreadCallback<Boolean>() {
+
+            @Override
+            protected Boolean jobContent() throws Exception {
+                return  LitPalUtils.deleteData(Tab_Project.class,"id = ?",String.valueOf(id))>0;
+            }
+
+            @Override
+            protected void jobEnd(Boolean aBoolean) {
+                if (getView()!=null){
+                    getView().delete_Project();
+                }
+            }
+        });
     }
 
 
