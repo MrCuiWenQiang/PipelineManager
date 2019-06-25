@@ -30,6 +30,7 @@ import com.zt.map.entity.db.tab.Tab_Marker;
 import com.zt.map.entity.db.tab.Tab_marker_photo;
 import com.zt.map.presenter.MarkerPresenter;
 import com.zt.map.util.PhotoUtil;
+import com.zt.map.view.widget.AutoCaseTransformationMethod;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -167,6 +168,8 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
 
         tvSave = findViewById(R.id.tv_save);
         tvExit = findViewById(R.id.tv_exit);
+
+        tvWtdh.setTransformationMethod(new AutoCaseTransformationMethod());
     }
 
     @Override

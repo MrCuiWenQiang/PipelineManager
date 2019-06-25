@@ -297,7 +297,11 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
 
             @Override
             protected Tab_Marker jobContent() throws Exception {
-                Tab_Marker tab_marker = LitPalUtils.selectsoloWhere(Tab_Marker.class, "projectId = ? AND wtdh=?", String.valueOf(projectId), s);
+                String value = s;
+                if (!TextUtils.isEmpty(value)){
+                    value = value.toUpperCase();
+                }
+                Tab_Marker tab_marker = LitPalUtils.selectsoloWhere(Tab_Marker.class, "projectId = ? AND wtdh=?", String.valueOf(projectId),value);
                 return tab_marker;
             }
 
