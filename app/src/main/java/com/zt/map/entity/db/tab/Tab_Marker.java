@@ -40,40 +40,45 @@ public class Tab_Marker extends LitePalSupport {
     private double latitude;//x
     @ExcelCount(order = 6, name = "纵坐标")
     private double longitude;//y
-    @ExcelCount(order = 7, name = "高程")
+    @ExcelCount(order = 7, name = "测绘横坐标")
+    private double chlatitude;//x
+    @ExcelCount(order = 8, name = "测绘纵坐标")
+    private double chlongitude;//y
+
+    @ExcelCount(order = 9, name = "高程")
     private String dmgc;//高程
-    @ExcelCount(order = 8, name = "偏心井点号")
+    @ExcelCount(order = 10, name = "偏心井点号")
     private String pxjw;//偏心井点号
-    @ExcelCount(order = 9, name = "井类型")
+    @ExcelCount(order = 11, name = "井类型")
     private String jlx;//井类型
-    @ExcelCount(order = 10, name = "井直径")
+    @ExcelCount(order = 12, name = "井直径")
     private String jzj;//井直径
-    @ExcelCount(order = 11, name = "井脖深")
+    @ExcelCount(order = 13, name = "井脖深")
     private String jbs;//井脖深
-    @ExcelCount(order = 12, name = "井底深")
+    @ExcelCount(order = 14, name = "井底深")
     private String jds;//井底深
-    @ExcelCount(order = 13, name = "井盖类型")
+    @ExcelCount(order = 15, name = "井盖类型")
     private String jglx;//井盖类型
-    @ExcelCount(order = 14, name = "井盖规格")
+    @ExcelCount(order = 16, name = "井盖规格")
     private String jggg;//井盖规格
-    @ExcelCount(order = 15, name = "井盖材质")
+    @ExcelCount(order = 17, name = "井盖材质")
     private String jgcz;//井盖材质
-    @ExcelCount(order = 16, name = "井盖状态")
+    @ExcelCount(order = 18, name = "井盖状态")
     private String jgzt;
-    @ExcelCount(order = 17, name = "所在位置")
+    @ExcelCount(order = 19, name = "所在位置")
     private String szwz;//所在位置
-    @ExcelCount(order = 18, name = "使用状态")
+    @ExcelCount(order = 20, name = "使用状态")
     private String syzt;//使用状态
-    @ExcelCount(order = 19, name = "探测方式")
+    @ExcelCount(order = 21, name = "探测方式")
     private String tcfs;//探测方式
 
-    @ExcelCount(order = 20, name = "所在河道")
+    @ExcelCount(order = 22, name = "所在河道")
     private String szhd;
-    @ExcelCount(order = 21, name = "排水户名称")
+    @ExcelCount(order = 23, name = "排水户名称")
     private String pshmc;
-    @ExcelCount(order = 22, name = "影像资料文件编号")
+    @ExcelCount(order = 24, name = "影像资料文件编号")
     private String wjbh;
-    @ExcelCount(order = 23, name = "隐患情况说明")
+    @ExcelCount(order = 25, name = "隐患情况说明")
     private String qksm;
 
     @ExcelCount(order = 30, name = "备注")
@@ -136,6 +141,22 @@ public class Tab_Marker extends LitePalSupport {
         } else {
             return null;
         }
+    }
+
+    public double getChlatitude() {
+        return chlatitude;
+    }
+
+    public void setChlatitude(double chlatitude) {
+        this.chlatitude = chlatitude;
+    }
+
+    public double getChlongitude() {
+        return chlongitude;
+    }
+
+    public void setChlongitude(double chlongitude) {
+        this.chlongitude = chlongitude;
     }
 
     public String getSzhd() {

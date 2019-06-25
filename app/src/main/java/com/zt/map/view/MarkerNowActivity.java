@@ -110,6 +110,9 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     private ImageView ivLoadTcfs;
     private EditText tvRemarks;
 
+    private EditText tv_ch_x;
+    private EditText tv_ch_y;
+
     private TextView tvSave;
     private TextView tvExit;
 
@@ -168,6 +171,9 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
 
         tvSave = findViewById(R.id.tv_save);
         tvExit = findViewById(R.id.tv_exit);
+
+        tv_ch_x = findViewById(R.id.tv_ch_x);
+        tv_ch_y = findViewById(R.id.tv_ch_y);
 
         tvWtdh.setTransformationMethod(new AutoCaseTransformationMethod());
     }
@@ -245,6 +251,10 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tab.setSzwz(getValue(tvSzwz));
         tab.setSyzt(getValue(tvSyzt));
         tab.setTcfs(getValue(tvTcfs));
+
+        tab.setChlatitude(getLong(tv_ch_x));
+        tab.setChlongitude(getLong(tv_ch_y));
+
         tab.setRemarks(getValue(tvRemarks));
 
         tab.setUpdateTime(new Date());
@@ -258,7 +268,7 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
     private double getLong(EditText et) {
         String value = getValue(et);
         if (TextUtils.isEmpty(value)) {
-            return -1;
+            return 0;
         } else {
             return Double.valueOf(value);
         }
@@ -355,8 +365,8 @@ public class MarkerNowActivity extends BaseMVPAcivity<MarkerContract.View, Marke
         tvY.setText(String.valueOf(marker.getLongitude()));
         tvDmgc.setText(marker.getDmgc());
         tvPxjw.setText(marker.getPxjw());
-
-
+        tv_ch_x.setText(String.valueOf(tab.getChlatitude()));
+        tv_ch_y.setText(String.valueOf(tab.getChlongitude()));
         tvJlx.setText(marker.getJlx());
         tvJzj.setText(marker.getJzj());
         tvJbs.setText(marker.getJbs());

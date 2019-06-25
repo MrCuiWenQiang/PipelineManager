@@ -374,7 +374,10 @@ public class MainPresenter extends BaseMVPPresenter<MainContract.View> implement
 
             @Override
             protected Boolean jobContent() throws Exception {
-                return  LitPalUtils.deleteData(Tab_Project.class,"id = ?",String.valueOf(id))>0;
+                LitPalUtils.deleteData(Tab_Project.class,"id = ?",String.valueOf(id));
+                LitPalUtils.deleteData(Tab_Marker.class,"projectId = ?",String.valueOf(id));
+                LitPalUtils.deleteData(Tab_Line.class,"projectId = ?",String.valueOf(id));
+                return true;
             }
 
             @Override

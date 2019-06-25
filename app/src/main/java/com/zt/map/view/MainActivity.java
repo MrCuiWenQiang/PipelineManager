@@ -780,6 +780,8 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
     @Override
     public void delete_Project() {
         dimiss();
+        baiduMap.clear();
+        projectId = -1;
         isOneLoad = true;
         mPresenter.queryProjects();
     }

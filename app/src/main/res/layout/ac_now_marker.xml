@@ -115,8 +115,31 @@
                         android:src="@mipmap/load" />
                 </LinearLayout>
             </LinearLayout>
+            <LinearLayout style="@style/edit_ll">
+
+                <TextView
+                    style="@style/edit_title"
+                    android:text="测绘横坐标" />
+
+                <EditText
+                    android:id="@+id/tv_ch_x"
+                    android:inputType="numberDecimal"
+                    style="@style/edit_view_edit" />
+            </LinearLayout>
 
             <LinearLayout style="@style/edit_ll">
+
+                <TextView
+                    style="@style/edit_title"
+                    android:text="测绘纵坐标" />
+
+                <EditText
+                    android:id="@+id/tv_ch_y"
+                    android:inputType="numberDecimal"
+                    style="@style/edit_view_edit" />
+            </LinearLayout>
+            <LinearLayout style="@style/edit_ll"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/edit_title"
@@ -127,7 +150,8 @@
                     style="@style/edit_view_edit" />
             </LinearLayout>
 
-            <LinearLayout style="@style/edit_ll">
+            <LinearLayout style="@style/edit_ll"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/edit_title"
