@@ -63,6 +63,7 @@ import com.zt.map.util.Base64Util;
 import com.zt.map.util.LocalUtil;
 import com.zt.map.util.LocalUtils;
 import com.zt.map.util.MapUtil;
+import com.zt.map.view.widget.AutoCaseTransformationMethod;
 import com.zt.map.view.widget.CreateDialog;
 import com.zt.map.view.widget.ProjectDialog;
 
@@ -995,6 +996,7 @@ public class MainActivity extends BaseMVPAcivity<MainContract.View, MainPresente
                         mPresenter.queryMarker(projectId, text.toString());
                     }
                 }).show();
+        builder.getEditText().setTransformationMethod(new AutoCaseTransformationMethod());
     }
 
     private void showNewProjectDialog() {
